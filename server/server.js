@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import 'dotenv/config'
 import bcrypt from 'bcrypt'
 import User from './Schema/User.js'
+import Blog from './Schema/Blog.js'
 import { nanoid } from "nanoid";
 import jwt from "jsonwebtoken";
 import cors from "cors"
@@ -27,12 +28,8 @@ mongoose.connect(process.env.DB_LOCATION, {
 })
 server.use(cors())
 
-// const generateUploadURL = () => {
-//     const data = new Date()
-//     const imageName = `${nanoid()}-${date.getTime()}.jpeg`
 
-    
-// }
+
 const formatDatatoSend = (user) => {
 
     const access_token = jwt.sign({ id: user._id },process.env.SECRET_ACCESS_KEY)
@@ -53,6 +50,31 @@ const generateUsername = async (email) => {
 
     return username
 }
+
+const generateUploadURL = (blog) => {
+    const date = new Date()
+    const imageName = `${nanoid()}-${date.getTime()}.jpeg`
+    return {
+        banner: blog.banner
+    }
+}
+
+server.post("/get-upload-url", (req, res) => {
+    const {base64}=req.body
+    try{
+        Image.create({image:base64})
+        res.send({Status:"ok"})
+    }
+    catch(error){
+        res.send({Status: "error", data:error})
+    }
+    // generateUploadURL().then(url => res.status(200).json({uploadUrl : url}))
+    // .catch(err => {
+    //     console.log(err.message);
+    //     return res.status(500).json({ "Lỗi": err.message })
+    // })
+})
+
 server.post("/signup", (req, res) => {
     let {fullname, email, password} = req.body
 
@@ -164,10 +186,13 @@ server.post("/google-auth", async (req, res) => {
         return res.status(200).json(formatDatatoSend(user))
     })
     .catch(err => {
-        return res.status(500).json({ "Lỗi": "Lỗi khi đăng nhập bằng tài khoản Google. Vui lòng thử lại bằng tài khoản khác" })
+        return res.status(500).json({ err: "Lỗi khi đăng nhập bằng tài khoản Google. Vui lòng thử lại bằng tài khoản khác" })
     })
 })
 
+server.post('/create-blog', (req, res) => {
+    return res.json(req.body)
+})
 server.listen(PORT, () => {
     console.log("listening on port" + PORT);
 })

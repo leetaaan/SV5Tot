@@ -1,8 +1,17 @@
-POST http://localhost:3000/signin
+
+# POST http://localhost:3000/signin
+# Content-Type: application/json
+# {
+#     "fullname": "Lê Tân",
+#     "email": "letan085@gmail.com",
+#     "password": "Letan12345"
+# }
+
+# GET http://localhost:3000/get-upload-url
+
+POST http://localhost:3000/create-blog
 Content-Type: application/json
 
 {
-    "fullname": "Lê Tân",
-    "email": "letan085@gmail.com",
-    "password": "Letan12345"
+    "blog-name": "blog test"
 }
