@@ -1,8 +1,9 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import logo from "../imgs/logo.png";
 import { useContext, useState } from "react";
 import { UserContext } from "../App";
 import UserNavigationPanel from "./user-navigation.component";
+
 const Navbar = () => {
   const [searchBoxVisibility, setSearchBoxVisibility] = useState(false);
   const [userPanel, setUserPanel] = useState(false)
@@ -10,6 +11,8 @@ const Navbar = () => {
     userAuth,
     userAuth: { access_token, profile_img }
   } = useContext(UserContext);
+
+  let navigate = useNavigate()
   const handleUserNavPanel = () => {
     setUserPanel(currentVal => !currentVal)
   }
@@ -18,6 +21,13 @@ const Navbar = () => {
       setUserPanel(false)
     }, 200)
   }
+  const handleSearch = (e) => {
+    let query = e.target.value
+    if (e.keyCode === 13 && query.length) {
+      navigate(`/search/${query}`)
+  }
+}
+
   return (
     <>
       <nav className="navbar">
@@ -34,7 +44,8 @@ const Navbar = () => {
             type="text"
             placeholder="Tìm kiếm"
             className="w-full md:w-auto bg-grey p-4 pl-6 pr-[12%] 
-        md:pr-6 rounded-full placeholder:text-dark-grey md:pl-12"
+            md:pr-6 rounded-full placeholder:text-dark-grey md:pl-12"
+            onKeyDown={handleSearch}
           />
           <i
             className="fi fi-rr-search absolute right-[10%] 
@@ -51,9 +62,9 @@ const Navbar = () => {
             <i className="fi fi-rr-search text-2xl"></i>
           </button>
         </div>
-        <Link to="/editor" className="hidden md:flex gap-2 link">
-          <i className="fi fi-rr-file-edit"></i>
-          <p>Tạo bài viết</p>
+        <Link to="/event" className="hidden lg:flex gap-2 link">
+        <i className="fi fi-rr-pennant"></i>
+          <p>Tham gia "Sinh viên 5 tốt"</p>
         </Link>
         {access_token ? 
           <>

@@ -1,60 +1,42 @@
 import React, { useContext } from "react";
 import AnimationWrapper from "../common/page-animation";
 import { Toaster, toast } from "react-hot-toast";
-import { EditorContext } from "../pages/editor.pages";
-import Tag from "./tags.component";
 import axios from "axios";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
+import { EditorEventContext } from "../pages/editor.sv5tot.page";
 
-const PublishForm = () => {
+const PublishEvent = () => {
   let characterLimit = 200;
-  let tagLimit = 5;
 
   let {
-    blog,
-    blog: { banner, title, tags, des, content },
+    event,
+    event: { banner, title, des, content },
     setEditorState,
-    setBlog,
-  } = useContext(EditorContext);
+    setEvent,
+  } = useContext(EditorEventContext);
 
   let { userAuth: { access_token }} = useContext(UserContext)
 
   let  navigate = useNavigate()
 
   const handleCloseEvent = () => {
-    setEditorState("editor");
+    setEditorState("event");
   };
 
   const handleBlogTitleChange = (e) => {
     let input = e.target;
-    setBlog({ ...blog, title: input.value });
+    setEvent({ ...event, title: input.value });
   };
 
   const handleBlogDesChange = (e) => {
     let input = e.target;
-    setBlog({ ...blog, des: input.value });
+    setEvent({ ...event, des: input.value });
   };
 
   const handleTitleKeyDown = (e) => {
     if (e.keyCode === 13) {
       e.preventDefault();
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.keyCode === 13 || e.keyCode === 188) {
-      e.preventDefault();
-      let tag = e.target.value;
-      console.log(tag);
-      if (tags.length < tagLimit) {
-        if (!tags.includes(tag) && tag.length) {
-          setBlog({ ...blog, tags: [...tags, tag] });
-        } else {
-          toast.error(`Bạn chỉ có thể thêm tối đa ${tagLimit} thư viện`);
-        }
-      }
-      e.target.value = "";
     }
   };
 
@@ -68,15 +50,13 @@ const PublishForm = () => {
     if(!des.length || des.length > characterLimit){
       return toast.error(`Nhập mô tả trước khi đăng với ${characterLimit} ký tự`)
     }
-    if(!tags.length){
-      return toast.error("Bài viết của bạn phải có ít nhất 1 thư viện")
-    }
+
     let loadingToat = toast.loading("Đang đăng....")
     e.target.classList.add('disable')
-    let blogObj = {
-      title, banner, des, content, tags, draft: false
+    let eventObj = {
+      title, banner, des, content
     }
-    axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/create-blog', blogObj, {
+    axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/create-event', eventObj, {
       headers: {
         'Authorization': `Bearer ${access_token}`
       }
@@ -140,28 +120,11 @@ const PublishForm = () => {
           <p className="mt-1 text-dark-grey text-sm text-right">
             {characterLimit - (des ? des.length : 0)} Ký tự còn lại
           </p>
-
-          <p className="text-dark-grey mb-2 mt-9">Chủ đề</p>
-
-          <div className="relative input-box pl-2 py-2 pb-4">
-            <input
-              type="text"
-              placeholder="Chủ đề"
-              className="sticky input-box bg-white top-0 left-0 pl-4 mb-3 focus:bg-white"
-              onKeyDown={handleKeyDown}
-            />
-            {tags.map((tag, i) => {
-              return <Tag tag={tag} tagIndex={i} key={i} />;
-            })}
-          </div>
-          <p className="mt-1 text-dark-grey mb-4 text-right">
-            {tagLimit - (tags ? tags.length : 0)} Thư viện còn lại
-          </p>
-          <button className="btn-dark px-8" onClick={publishBlog}>Đăng</button>
+          <button className="btn-dark px-8" onClick={publishBlog}>Gửi</button>
         </div>
       </section>
     </AnimationWrapper>
   );
 };
 
-export default PublishForm;
+export default PublishEvent;

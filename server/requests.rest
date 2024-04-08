@@ -1,6 +1,7 @@
-
+# token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDE4OTljNGQ4NzY3OTVjZjIyMjBjNSIsImlhdCI6MTcxMjA4NDI4MH0.IdOYCsExzvqbxgl37o9wCaI7e3knjjmL6hJLRg7Jt4A
 # POST http://localhost:3000/signin
 # Content-Type: application/json
+
 # {
 #     "fullname": "Lê Tân",
 #     "email": "letan085@gmail.com",
@@ -9,9 +10,54 @@
 
 # GET http://localhost:3000/get-upload-url
 
-POST http://localhost:3000/create-blog
+# POST http://localhost:3000/create-blog
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDE4OTljNGQ4NzY3OTVjZjIyMjBjNSIsImlhdCI6MTcxMjEyMzQ1OH0.e_55a2DL_HhCpjcSX5KmdhkbGBev2tpZSuBEAwQGieU
+
+# {
+#     "title": "blog test #2sdf",
+#     "banner": "https://example.com/image.jpg",
+#     "des": "des test",
+#     "content": {
+#         "blocks": [ 1, 2 ]
+#     },
+#     "tags": [ "1", "2" ]
+# }
+
+# GET  http://localhost:3000/latest-blogs
+
+# GET  http://localhost:3000/trending-blogs
+
+# POST  http://localhost:3000/search-blogs
+# Content-Type: application/json
+
+# {
+#     "tag": "tag 1"
+# }
+
+# POST  http://localhost:3000/search-users
+# Content-Type: application/json
+
+# {
+#     "query": "letan"
+# }
+
+POST  http://localhost:3000/get-profile
 Content-Type: application/json
 
 {
-    "blog-name": "blog test"
+    "username": "letan"
 }
+
+# POST http://localhost:3000/create-event
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDE4OTljNGQ4NzY3OTVjZjIyMjBjNSIsImlhdCI6MTcxMjEyMzQ1OH0.e_55a2DL_HhCpjcSX5KmdhkbGBev2tpZSuBEAwQGieU
+
+# {
+#     "title": "blog test #2sdf",
+#     "banner": "https://example.com/image.jpg",
+#     "des": "des test",
+#     "content": {
+#         "blocks": [ 1, 2 ]
+#     }
+# }

@@ -2,17 +2,18 @@ import React, { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../imgs/logo.png";
 import AnimationWrapper from "../common/page-animation";
-import defaultBanner from "../imgs/blog banner.png";
+import defaultBanner from "../imgs/event banner.png";
 import { Toaster, toast } from "react-hot-toast";
-import { EditorContext } from "../pages/editor.pages";
 import EditorJS from '@editorjs/editorjs'
 import { tools } from "./tools.component";
 import axios from "axios";
 import { UserContext } from "../App";
+import { EditorEventContext } from "../pages/editor.sv5tot.page";
 
-const BlogEditor = () => {
-  let { blog, blog: { title, banner, content, tags, des }, setBlog, textEditor, setTextEditor,
-  setEditorState } = useContext(EditorContext)
+
+const EventEditor = () => {
+  let { event, event: { title, banner, content, des }, setEvent, textEditor, setTextEditor,
+  setEditorState } = useContext(EditorEventContext)
 
   let { userAuth: { access_token }} = useContext(UserContext)
 
@@ -24,7 +25,7 @@ const BlogEditor = () => {
         holderId: "textEditor",
         data: content,
         tools: tools,
-        placeholder: "Viết gì đó"
+        placeholder: "Viết một bài viết về 5 tiêu chí của bạn có hình ảnh chứng minh cụ thể"
       }))
     }
   }, [])
@@ -36,7 +37,7 @@ const BlogEditor = () => {
       let loadingToast = toast.loading("Đang tải ảnh...")
       toast.dismiss(loadingToast);
       toast.success("Đã tải ảnh");
-      setBlog({ ...blog, banner: reader.result })
+      setEvent({ ...event, banner: reader.result })
     }
     reader.onerror = err => {
       toast.dismiss(loadingToast);
@@ -55,8 +56,8 @@ const BlogEditor = () => {
 
     input.style.height = 'auto'
     input.style.height = input.scrollHeight + 'px'
-    console.log(blog);
-    setBlog({ ...blog, title: input.value })
+    console.log(event);
+    setEvent({ ...event, title: input.value })
   }
 
   const handlePushlish = () => {
@@ -69,7 +70,7 @@ const BlogEditor = () => {
     if(textEditor.isReady){
       textEditor.save().then(data => {
         if(data.blocks.length){
-          setBlog({...blog, content: data})
+          setEvent({...event, content: data})
           setEditorState("pushlish")
         }else {
           return toast.error("Vui lòng thêm mô tả để đăng")
@@ -92,11 +93,11 @@ const BlogEditor = () => {
     e.target.classList.add('disable')
     if(textEditor.isReady){
       textEditor.save().then(content => {
-        let blogObj = {
+        let eventObj = {
           title, banner, des, content, tags, draft: true
         }
 
-        axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/create-blog', blogObj, {
+        axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/create-blog', eventObj, {
           headers: {
             'Authorization': `Bearer ${access_token}`
           }
@@ -127,11 +128,10 @@ const BlogEditor = () => {
           <img src={logo} />
         </Link>
         <p className="max-md:hidden text-black line-clamp-1 w-full">
-          {title.length ? title : "Bài viết mới"}
+          {title.length ? title : `Tham gia "Sinh viên 5 tốt"`}
         </p>
         <div className="flex gap-4 ml-auto">
           <button className="btn-dark py-2" onClick={handlePushlish}>Đăng</button>
-          <button className="btn-light py-2" onClick={handleSaveDraft}>Lưu bản nháp</button>
         </div>
       </nav>
 
@@ -157,7 +157,7 @@ const BlogEditor = () => {
             </div>
             <textarea
               defaultValue={title}
-              placeholder="Tiêu đề"
+              placeholder="Tiêu đề (MSSV-Lop-HoTen)"
               className="text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40"
               onKeyDown={handleTitleKeyDown}
               onChange={handleTitleChange}
@@ -172,4 +172,4 @@ const BlogEditor = () => {
   );
 };
 
-export default BlogEditor;
+export default EventEditor;
