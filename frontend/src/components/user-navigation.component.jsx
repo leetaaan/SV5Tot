@@ -13,7 +13,11 @@ const UserNavigationPanel = () => {
   return (
     <AnimationWrapper className="absolute right-0 z-50" transition = {{ duration: 0.2 }}>
       <div className="absolute bg-white right-0 border border-grey w-60 overflow-hidden duration-200">
-        <Link to="/editor" className='flex gap-2 link md:hidden pl-8 py-4'>
+      <Link to="/event" className="flex gap-2 link pl-8 py-4 lg:hidden">
+        <i className="fi fi-rr-pennant"></i>
+          <p>Tham gia "Sinh viên 5 tốt"</p>
+        </Link>
+        <Link to="/editor" className='flex gap-2 link pl-8 py-4'>
           <i className="fi fi-rr-file-edit"></i>
           <p>Tạo bài viết</p>
         </Link>
