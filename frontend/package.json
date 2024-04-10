@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.13.0",
+    "@cloudinary/url-gen": "^1.19.0",
     "@editorjs/code": "^2.8.0",
     "@editorjs/editorjs": "^2.27.2",
     "@editorjs/embed": "^2.5.3",
@@ -22,6 +24,7 @@
     "@editorjs/quote": "^2.5.0",
     "@flaticon/flaticon-uicons": "^2.2.0",
     "axios": "^1.4.0",
+    "cloudinary-core": "^2.13.1",
     "firebase": "^10.1.0",
     "framer-motion": "^10.13.0",
     "react": "^18.2.0",

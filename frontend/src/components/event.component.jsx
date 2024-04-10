@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useCallback} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../imgs/logo.png";
 import AnimationWrapper from "../common/page-animation";
@@ -6,10 +6,9 @@ import defaultBanner from "../imgs/event banner.png";
 import { Toaster, toast } from "react-hot-toast";
 import EditorJS from '@editorjs/editorjs'
 import { tools } from "./tools.component";
-import axios from "axios";
 import { UserContext } from "../App";
 import { EditorEventContext } from "../pages/editor.sv5tot.page";
-
+import { uploadToCloudinary } from "../common/cloundinary";
 
 const EventEditor = () => {
   let { event, event: { title, banner, content, des }, setEvent, textEditor, setTextEditor,
@@ -30,20 +29,22 @@ const EventEditor = () => {
     }
   }, [])
 
-  const handleBannerUpload = (e) => {
-    var reader = new FileReader()
-    reader.readAsDataURL(e.target.files[0])
-    reader.onload = () => {
-      let loadingToast = toast.loading("Đang tải ảnh...")
-      toast.dismiss(loadingToast);
-      toast.success("Đã tải ảnh");
-      setEvent({ ...event, banner: reader.result })
-    }
-    reader.onerror = err => {
-      toast.dismiss(loadingToast);
-      return toast.error(err);
-    }
-  };
+  const handleBannerUpload = useCallback((e) => {
+    let file = e.target.files[0]
+    let reader = new FileReader()
+    reader.onload = async () => {
+      if(reader.result){
+        let loadingToast = toast.loading("Đang tải ảnh...")
+        const filename = reader.result
+        const url = await uploadToCloudinary(filename)
+        setEvent({ ...event, banner: url })
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+      toast.error("Tải ảnh không thành công");
+     }
+     reader.readAsDataURL(file)
+  }, []);
 
   const handleTitleKeyDown = (e) => {
     if (e.keyCode === 13) {
@@ -80,45 +81,6 @@ const EventEditor = () => {
         console.log(err);
       })
     }
-  }
-
-  const handleSaveDraft = (e) => {
-    if(e.target.className.includes("disable")){
-      return
-    }
-    if(!title.length){
-      return toast.error("Nhập tiêu đề trước khi lưu")
-    }
-    let loadingToat = toast.loading("Đang lưu....")
-    e.target.classList.add('disable')
-    if(textEditor.isReady){
-      textEditor.save().then(content => {
-        let eventObj = {
-          title, banner, des, content, tags, draft: true
-        }
-
-        axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/create-blog', eventObj, {
-          headers: {
-            'Authorization': `Bearer ${access_token}`
-          }
-        })
-        .then(() => {
-          e.target.classList.remove('disable')
-          toast.dismiss(loadingToat)
-          toast.success("Đã lưu")
-          setTimeout(() => {
-            navigate("/")
-          }, 500)
-        })
-        .catch(({response}) => {
-          e.target.classList.remove('disable')
-          toast.dismiss(loadingToat)
-    
-          return toast.error(response.data.error)
-        })
-      })
-    }
-
   }
 
   return (

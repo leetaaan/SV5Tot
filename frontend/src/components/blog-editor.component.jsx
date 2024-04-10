@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../imgs/logo.png";
 import AnimationWrapper from "../common/page-animation";
@@ -9,6 +9,7 @@ import EditorJS from '@editorjs/editorjs'
 import { tools } from "./tools.component";
 import axios from "axios";
 import { UserContext } from "../App";
+import { uploadToCloudinary } from "../common/cloundinary";
 
 const BlogEditor = () => {
   let { blog, blog: { title, banner, content, tags, des }, setBlog, textEditor, setTextEditor,
@@ -29,20 +30,22 @@ const BlogEditor = () => {
     }
   }, [])
 
-  const handleBannerUpload = (e) => {
-    var reader = new FileReader()
-    reader.readAsDataURL(e.target.files[0])
-    reader.onload = () => {
-      let loadingToast = toast.loading("Đang tải ảnh...")
-      toast.dismiss(loadingToast);
-      toast.success("Đã tải ảnh");
-      setBlog({ ...blog, banner: reader.result })
-    }
-    reader.onerror = err => {
-      toast.dismiss(loadingToast);
-      return toast.error(err);
-    }
-  };
+  const handleBannerUpload = useCallback((e) => {
+    let file = e.target.files[0]
+    let reader = new FileReader()
+    reader.onload = async () => {
+      if(reader.result){
+        let loadingToast = toast.loading("Đang tải ảnh...")
+        const filename = reader.result
+        const url = await uploadToCloudinary(filename)
+        setBlog({ ...blog, banner: url })
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+      toast.error("Tải ảnh không thành công");
+     }
+     reader.readAsDataURL(file)
+  }, []);
 
   const handleTitleKeyDown = (e) => {
     if (e.keyCode === 13) {
