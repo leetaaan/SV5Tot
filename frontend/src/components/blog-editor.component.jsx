@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import logo from "../imgs/logo.png";
 import AnimationWrapper from "../common/page-animation";
 import defaultBanner from "../imgs/blog banner.png";
@@ -16,6 +16,7 @@ const BlogEditor = () => {
   setEditorState } = useContext(EditorContext)
 
   let { userAuth: { access_token }} = useContext(UserContext)
+  let { blog_id } = useParams()
 
   let navigate = useNavigate()
 
@@ -23,7 +24,7 @@ const BlogEditor = () => {
     if(!textEditor.isReady){
       setTextEditor(new EditorJS({
         holderId: "textEditor",
-        data: content,
+        data: Array.isArray(content) ? content[0] : content,
         tools: tools,
         placeholder: "Viết gì đó"
       }))
@@ -42,7 +43,6 @@ const BlogEditor = () => {
         toast.dismiss(loadingToast);
         toast.success("Đã tải ảnh");
       }
-      toast.error("Tải ảnh không thành công");
      }
      reader.readAsDataURL(file)
   }, []);
@@ -93,13 +93,14 @@ const BlogEditor = () => {
     }
     let loadingToat = toast.loading("Đang lưu....")
     e.target.classList.add('disable')
+    
     if(textEditor.isReady){
       textEditor.save().then(content => {
         let blogObj = {
           title, banner, des, content, tags, draft: true
         }
 
-        axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/create-blog', blogObj, {
+        axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/create-blog', {...blogObj, id: blog_id}, {
           headers: {
             'Authorization': `Bearer ${access_token}`
           }

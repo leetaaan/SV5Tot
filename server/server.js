@@ -69,33 +69,6 @@ const generateUsername = async (email) => {
   return username;
 };
 
-// const cloudinary = new cloudinary.config({
-//     cloud_name: 'dcl6hjfyu',
-//     api_key: '877541478169475',
-//     api_secret: 'tM2NPUb52qPTofVeXdQA_sQT3fA'
-// })
-// const generateUploadURL = (blog) => {
-//   const date = new Date();
-//   const imageName = `${nanoid()}-${date.getTime()}.jpeg`;
-
-//   cloudinary.ge
-// };
-
-server.post("/get-upload-url", (req, res) => {
-  const { base64 } = req.body;
-  try {
-    Image.create({ image: base64 });
-    res.send({ Status: "ok" });
-  } catch (error) {
-    res.send({ Status: "error", data: error });
-  }
-  // generateUploadURL().then(url => res.status(200).json({uploadUrl : url}))
-  // .catch(err => {
-  //     console.log(err.message);
-  //     return res.status(500).json({ "Lỗi": err.message })
-  // })
-});
-
 //user
 server.post("/signup", (req, res) => {
   let { fullname, email, password } = req.body;
@@ -224,32 +197,33 @@ server.post("/google-auth", async (req, res) => {
 });
 
 server.post("/search-users", (req, res) => {
+  let { query } = req.body;
 
-  let { query } = req.body
-
-  User.find({"personal_info.username": new RegExp(query, 'i')})
-  .limit(50)
-  .select("personal_info.fullname personal_info.username personal_info.profile_img -_id")
-  .then(users => {
-    return res.status(200).json({ users })
-  })
-  .catch(err => {
-    return res.status(500).json({ error : err.message })
-  })
-})
+  User.find({ "personal_info.username": new RegExp(query, "i") })
+    .limit(50)
+    .select(
+      "personal_info.fullname personal_info.username personal_info.profile_img -_id"
+    )
+    .then((users) => {
+      return res.status(200).json({ users });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
 
 server.post("/get-profile", (req, res) => {
-  let { username } = req.body
+  let { username } = req.body;
 
   User.findOne({ "personal_info.username": username })
-  .select("-personal_info.password -google_auth -updatedAt -blogs")
-  .then(user => {
-    return res.status(200).json(user)
-  })
-  .catch(err => {
-    return res.status(500).json({ error: err.message })
-  })
-})
+    .select("-personal_info.password -google_auth -updatedAt -blogs")
+    .then((user) => {
+      return res.status(200).json(user);
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
 // blog
 server.post("/latest-blogs", (req, res) => {
   let { page } = req.body;
@@ -283,7 +257,7 @@ server.get("/trending-blogs", (req, res) => {
     .sort({
       "activity.total_read": -1,
       "activity.total_likes": -1,
-      "publishedAt": -1,
+      publishedAt: -1,
     })
     .select("blog_id title publishedAt -_id")
     .limit(maxLimit)
@@ -297,7 +271,7 @@ server.get("/trending-blogs", (req, res) => {
 
 server.post("/all-latest-blogs-count", (req, res) => {
   Blog.countDocuments({ draft: false })
-    .then(count => {
+    .then((count) => {
       return res.status(200).json({ totalDocs: count });
     })
     .catch((err) => {
@@ -306,24 +280,24 @@ server.post("/all-latest-blogs-count", (req, res) => {
 });
 
 server.post("/search-blogs", (req, res) => {
-  let { tag, query, author, page } = req.body;
+  let { tag, query, author, page, limit, eliminate_blog } = req.body;
   let findQuery;
 
   if (tag) {
-    findQuery = { tags: tag, draft: false };
+    findQuery = { tags: tag, draft: false, blog_id: { $ne: eliminate_blog } };
   } else if (query) {
     findQuery = { draft: false, title: new RegExp(query, "i") };
-  } else if(author) {
-    findQuery = { author, draft: false }
+  } else if (author) {
+    findQuery = { author, draft: false };
   }
 
-  let maxLimit = 2;
+  let maxLimit = limit ? limit : 2;
   Blog.find(findQuery)
     .populate(
       "author",
       "personal_info.fullname personal_info.username personal_info.profile_img -_id"
     )
-    .sort({ "publishedAt": -1 })
+    .sort({ publishedAt: -1 })
     .select("blog_id title des banner activity tags publishedAt -_id")
     .skip((page - 1) * maxLimit)
     .limit(maxLimit)
@@ -338,13 +312,13 @@ server.post("/search-blogs", (req, res) => {
 server.post("/search-blogs-count", (req, res) => {
   let { tag, author, query } = req.body;
 
-  let findQuery
+  let findQuery;
   if (tag) {
     findQuery = { tags: tag, draft: false };
   } else if (query) {
     findQuery = { draft: false, title: new RegExp(query, "i") };
-  }  else if(author) {
-    findQuery = { author, draft: false }
+  } else if (author) {
+    findQuery = { author, draft: false };
   }
   Blog.countDocuments(findQuery)
     .then((count) => {
@@ -357,7 +331,7 @@ server.post("/search-blogs-count", (req, res) => {
 
 server.post("/create-blog", verifyJWT, (req, res) => {
   let authorId = req.user;
-  let { title, des, banner, tags, content, draft } = req.body;
+  let { title, des, banner, tags, content, draft, id } = req.body;
   if (!title.length) {
     return res.status(403).json({ error: "Bạn phải cung cấp tiêu đề để đăng" });
   }
@@ -385,46 +359,90 @@ server.post("/create-blog", verifyJWT, (req, res) => {
   }
   tags = tags.map((tag) => tag.toLowerCase());
   let blog_id =
+    id ||
     title
       .replace(/[^a-zA-Z0-9]/g, " ")
       .replace(/\s+/g, "-")
       .trim() + nanoid();
-  let blog = new Blog({
-    title,
-    des,
-    banner,
-    content,
-    tags,
-    author: authorId,
-    blog_id,
-    draft: Boolean(draft),
-  });
 
-  blog
-    .save()
+  if (id) {
+
+    Blog.findOneAndUpdate({ blog_id }, {title, des, banner, content, tags, draft: draft ? draft: false})
+    .then(() => {
+      return res.status(200).json({ id: blog_id });
+    })
+    .catch(err => {
+      return res.status(500).json({ error: err.message });
+    })
+  } else {
+    let blog = new Blog({
+      title,
+      des,
+      banner,
+      content,
+      tags,
+      author: authorId,
+      blog_id,
+      draft: Boolean(draft),
+    });
+
+    blog
+      .save()
+      .then((blog) => {
+        let incrementVal = draft ? 0 : 1;
+        User.findOneAndUpdate(
+          { _id: authorId },
+          {
+            $inc: { "account_info.total_posts": incrementVal },
+            $push: { blogs: blog._id },
+          }
+        )
+          .then((user) => {
+            return res.status(200).json({ id: blog.blog_id });
+          })
+          .catch((err) => {
+            return res
+              .status(500)
+              .json({ error: "Cập nhật tổng số bài viết không thành công" });
+          });
+      })
+      .catch((err) => {
+        return res.status(500).json({ error: err.message });
+      });
+  }
+});
+
+server.post("/get-blog", (req, res) => {
+  let { blog_id, draft, mode } = req.body;
+
+  let incrementVal = mode != "edit" ? 1 : 0;
+
+  Blog.findOneAndUpdate(
+    { blog_id },
+    { $inc: { "activity.total_reads": incrementVal } }
+  )
+    .populate(
+      "author",
+      "personal_info.fullname personal_info.username personal_info.profile_img"
+    )
+    .select("title des banner content activity tags publishedAt blog_id ")
     .then((blog) => {
-      let incrementVal = draft ? 0 : 1;
       User.findOneAndUpdate(
-        { _id: authorId },
-        {
-          $inc: { "account_info.total_posts": incrementVal },
-          $push: { blogs: blog._id },
-        }
-      )
-        .then((user) => {
-          return res.status(200).json({ id: blog.blog_id });
-        })
-        .catch((err) => {
-          return res
-            .status(500)
-            .json({ error: "Cập nhật tổng số bài viết không thành công" });
-        });
+        { "personal_info.username": blog.author.personal_info.username },
+        { $inc: { "account_info.total_reads": incrementVal } }
+      ).catch((err) => {
+        return res.status(500).json({ error: err.message });
+      });
+      if (blog.draft && !draft) {
+        return res.status(500).json({ error: "loi khong tim thay dia chi" });
+      }
+
+      return res.status(200).json({ blog });
     })
     .catch((err) => {
       return res.status(500).json({ error: err.message });
     });
 });
-
 //sv 5 tot
 server.post("/create-event", verifyJWT, (req, res) => {
   let authorId = req.user;
