@@ -10,6 +10,7 @@ import SearchPage from "./pages/search.page";
 import EditorSV5Tot from "./pages/editor.sv5tot.page";
 import PageNotFound from "./pages/404.page";
 import ProfilePage from "./pages/profile.page";
+import BlogPage from "./pages/blog.page";
 
 export const UserContext = createContext({});
 
@@ -28,6 +29,8 @@ const App = () => {
     <UserContext.Provider value={{ userAuth, setUserAuth }}>
       <Routes>
         <Route path="/editor" element={<Editor/>} />
+        <Route path="/editor/:blog_id" element={<Editor/>} />
+
         <Route path="/event" element={<EditorSV5Tot/>} />
         {/* <Route path="/" element={<HomePage />} /> */}
         <Route path="/" element={<Navbar />}>
@@ -36,7 +39,7 @@ const App = () => {
           <Route path="/signup" element={<UserAuthForm type="sign-up" />} />
           <Route path="search/:query" element={<SearchPage />} />
           <Route path="user/:id" element={<ProfilePage />} />
-
+          <Route path="blog/:blog_id" element={<BlogPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
       </Routes>
