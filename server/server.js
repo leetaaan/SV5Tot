@@ -2,15 +2,18 @@ import express from "express";
 import mongoose from "mongoose";
 import "dotenv/config";
 import bcrypt from "bcrypt";
-import User from "./Schema/User.js";
-import Blog from "./Schema/Blog.js";
 import { nanoid } from "nanoid";
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import admin from "firebase-admin";
 import serviceAccountKey from "./sinh-vien-5tot-firebase-adminsdk-355hd-ac4e4aa098.json" assert { type: "json" };
 import { getAuth } from "firebase-admin/auth";
+
 import Event from "./Schema/Event.js";
+import User from "./Schema/User.js";
+import Blog from "./Schema/Blog.js";
+import Notification from "./Schema/Notification.js";
+import Comment from "./Schema/Comment.js";
 
 const server = express();
 let PORT = 3000;
@@ -84,7 +87,7 @@ server.post("/signup", (req, res) => {
   }
   if (!passwordRegex.test(password)) {
     return res.status(403).json({
-      Lỗi: "Mật khẩu phải từ 6 đến 20 ký tự bao gồm số, 1 ký tự thường, 1 ký tự hoa",
+      Lỗi: "Mật khẩu phải từ 6 đến 20 ký tự bao gồm ít nhất 1 số, 1 ký tự thường, 1 ký tự hoa",
     });
   }
   bcrypt.hash(password, 10, async (err, hashed_password) => {
@@ -224,6 +227,128 @@ server.post("/get-profile", (req, res) => {
       return res.status(500).json({ error: err.message });
     });
 });
+
+server.post("/change-password", verifyJWT, (req, res) => {
+  let { currentPassword, newPassword } = req.body;
+
+  if (
+    !passwordRegex.test(currentPassword) ||
+    !passwordRegex.test(newPassword)
+  ) {
+    return res.status(403).json({
+      error:
+        "Mật khẩu phải từ 6 đến 20 ký tự bao gồm ít nhất 1 số, 1 ký tự thường, 1 ký tự hoa",
+    });
+  }
+
+  User.findOne({ _id: req.user })
+    .then((user) => {
+      if (user.google_auth) {
+        return res.status(403).json({
+          error: "Bạn không thể đổi mật khẩu vì bạn đăng nhập bằng Google",
+        });
+      }
+
+      bcrypt.compare(
+        currentPassword,
+        user.personal_info.password,
+        (err, result) => {
+          if (err) {
+            return res
+              .status(500)
+              .json({ error: "Đã có lỗi xảy ra, vui lòng thử lại" });
+          }
+
+          if (!result) {
+            return res.status(500).json({ error: "Mật khẩu cũ không đúng" });
+          }
+
+          bcrypt.hash(newPassword, 10, (err, hashed_password) => {
+            User.findOneAndUpdate(
+              { _id: req.user },
+              { "personal_info.password": hashed_password }
+            )
+              .then((u) => {
+                return res.status(200).json({ status: "Đã đổi mật khẩu" });
+              })
+              .catch((err) => {
+                return res
+                  .status(500)
+                  .json({
+                    error:
+                      "Đã có lỗi xảy ra khi lưu mật khẩu mới, vui lòng thử lại",
+                  });
+              });
+          });
+        }
+      );
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: "Không tìm thấy người dùng" });
+    });
+});
+
+server.post("/update-profile-img", verifyJWT, (req, res) => {
+  let { url } = req.body;
+  User.findOneAndUpdate({ _id: req.user }, { "personal_info.profile_img": url })
+    .then(() => {
+      return res.status(200).json({ profile_img: url });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/update-profile", verifyJWT, (req, res) => {
+  let { username, bio, social_links } = req.body;
+  let bioLimit = 150;
+  if (username.length < 3) {
+    return res
+      .status(403)
+      .json({ error: "Tên tài khoản phải ít nhất 3 ký tự" });
+  }
+  if (bio.length > bioLimit) {
+    return res
+      .status(403)
+      .json({ error: `Mô tả không thể nhiều hơn ${bioLimit} ký tự` });
+  }
+
+  let socialLinksArr = Object.keys(social_links);
+  try {
+    for (let i = 0; i < socialLinksArr.length; i++) {
+      if (social_links[socialLinksArr[i]].length) {
+        let hostname = new URL(social_links[socialLinksArr[i]]).hostname;
+
+        if(!hostname.includes(`${socialLinksArr[i]}.com`) && socialLinksArr[i] != 'website'){
+          return res.status(403).json({ error: `${socialLinksArr[i]} không đúng. Vui lòng thử lại`})
+        }
+      }
+    }
+  } catch (err) {
+    return res.status(500).json({
+      error: "Bạn phải cung cấp liên kết với http(s)",
+    });
+  }
+
+  let updateObj = {
+    "personal_info.username": username,
+    "personal_info.bio": bio,
+    social_links,
+  };
+  User.findOneAndUpdate({ _id: req.user }, updateObj, {
+    runValidators: true,
+  })
+  .then(() => {
+    return res.status(200).json({ username })
+    })
+    .catch(err => {
+    if(err.code == 11000){
+    return res.status(409).json({ error: "Tên tài khoản đã được người khác sử dụng" })
+    }
+    return res.status(500).json({ error: err.message })
+    })
+});
+
 // blog
 server.post("/latest-blogs", (req, res) => {
   let { page } = req.body;
@@ -366,14 +491,16 @@ server.post("/create-blog", verifyJWT, (req, res) => {
       .trim() + nanoid();
 
   if (id) {
-
-    Blog.findOneAndUpdate({ blog_id }, {title, des, banner, content, tags, draft: draft ? draft: false})
-    .then(() => {
-      return res.status(200).json({ id: blog_id });
-    })
-    .catch(err => {
-      return res.status(500).json({ error: err.message });
-    })
+    Blog.findOneAndUpdate(
+      { blog_id },
+      { title, des, banner, content, tags, draft: draft ? draft : false }
+    )
+      .then(() => {
+        return res.status(200).json({ id: blog_id });
+      })
+      .catch((err) => {
+        return res.status(500).json({ error: err.message });
+      });
   } else {
     let blog = new Blog({
       title,
@@ -438,6 +565,228 @@ server.post("/get-blog", (req, res) => {
       }
 
       return res.status(200).json({ blog });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/like-blog", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { _id, islikedByUser } = req.body;
+
+  let incrementVal = !islikedByUser ? 1 : -1;
+
+  Blog.findOneAndUpdate(
+    { _id },
+    { $inc: { "activity.total_likes": incrementVal } }
+  ).then((blog) => {
+    if (!islikedByUser) {
+      let like = new Notification({
+        type: "like",
+        blog: _id,
+        notification_for: blog.author,
+        user: user_id,
+      });
+
+      like.save().then((notification) => {
+        return res.status(200).json({ like_by_user: true });
+      });
+    } else {
+      Notification.findOneAndDelete({ user: user_id, blog: _id, type: "like" })
+        .then((data) => {
+          return res.status(200).json({ like_by_user: false });
+        })
+        .catch((err) => {
+          return res.status(500).json({ error: err.message });
+        });
+    }
+  });
+});
+
+server.post("/isliked-by-user", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { _id } = req.body;
+
+  Notification.exists({ user: user_id, type: "like", blog: _id })
+    .then((result) => {
+      return res.status(200).json({ result });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/add-comment", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { _id, comment, blog_author, replying_to } = req.body;
+
+  if (!comment.length) {
+    return res.status(403).json({ error: "Viết nội dung để bình luận" });
+  }
+
+  let commentObj = {
+    blog_id: _id,
+    blog_author,
+    comment,
+    commented_by: user_id,
+  };
+
+  if (replying_to) {
+    commentObj.parent = replying_to;
+    commentObj.isReply = true;
+  }
+
+  new Comment(commentObj).save().then(async (commentFile) => {
+    let { comment, commentedAt, children } = commentFile;
+
+    Blog.findOneAndUpdate(
+      { _id },
+      {
+        $push: { comments: commentFile._id },
+        $inc: {
+          "activity.total_comments": 1,
+          "activity.total_parent_comments": replying_to ? 0 : 1,
+        },
+      }
+    ).then((blog) => {
+      console.log("Đã tạo bình luận mới");
+    });
+
+    let notificationObj = {
+      type: replying_to ? "reply" : "comment",
+      blog: _id,
+      notification_for: blog_author,
+      user: user_id,
+      comment: commentFile._id,
+    };
+
+    if (replying_to) {
+      notificationObj.replied_on_comment = replying_to;
+
+      await Comment.findOneAndUpdate(
+        { _id: replying_to },
+        { $push: { children: commentFile._id } }
+      ).then((replyingToCommentDoc) => {
+        notificationObj.notification_for = replyingToCommentDoc.commented_by;
+      });
+    }
+
+    new Notification(notificationObj)
+      .save()
+      .then((notification) => console.log("Đã tạo thông báo mới"));
+
+    return res.status(200).json({
+      comment,
+      commentedAt,
+      _id: commentFile._id,
+      user_id,
+      children,
+    });
+  });
+});
+
+server.post("/get-replies", (req, res) => {
+  let { _id, skip } = req.body;
+
+  let maxLimit = 5;
+
+  Comment.findOne({ _id })
+    .populate({
+      path: "children",
+      options: {
+        limit: maxLimit,
+        skip: skip,
+        sort: { commentedAt: -1 },
+      },
+      populate: {
+        path: "commented_by",
+        select:
+          "personal_info.fullname personal_info.username personal_info.profile_img",
+      },
+      select: "-blog_id -updatedAt",
+    })
+    .select("children")
+    .then((doc) => {
+      return res.status(200).json({ replies: doc.children });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+const deleteComments = (_id) => {
+  Comment.findOneAndDelete({ _id })
+    .then((comment) => {
+      if (comment.parent) {
+        Comment.findOneAndUpdate(
+          { _id: comment.parent },
+          { $pull: { children: _id } }
+        )
+          .then((data) => console.log("Xóa bình luận"))
+          .catch((err) => console.log(err));
+      }
+      Notification.findOneAndDelete({ comment: _id }).then((notification) =>
+        console.log("Thông báo về bình luận đã được xóa")
+      );
+      Notification.findOneAndDelete({ reply: _id }).then((notification) =>
+        console.log("Thông báo về trả lời đã được xóa")
+      );
+
+      Blog.findOneAndUpdate(
+        { _id: comment.blog_id },
+        {
+          $pull: { comments: _id },
+          $inc: { "activity.total_comments": -1 },
+          "activity.total_parent_comments": comment.parent ? 0 : -1,
+        }
+      ).then((blog) => {
+        if (comment.children.length) {
+          comment.children.map((replies) => {
+            deleteComments(replies);
+          });
+        }
+      });
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+};
+server.post("/delete-comment", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { _id } = req.body;
+
+  Comment.findOne({ _id }).then((comment) => {
+    if (user_id == comment.commented_by || user_id == comment.blog_author) {
+      deleteComments(_id);
+      return res.status(200).json({ status: "Xong" });
+    } else {
+      return res.status(403).json({ error: "Bạn không thể xóa bình luận này" });
+    }
+  });
+});
+
+server.post("/get-blog-comments", (req, res) => {
+  let { blog_id, skip } = req.body;
+
+  let maxLimit = 5;
+
+  Comment.find({ blog_id, isReply: false })
+    .populate(
+      "commented_by",
+      "personal_info.username personal_info.fullname personal_info.profile_img"
+    )
+    .skip(skip)
+    .limit(maxLimit)
+    .sort({
+      commentedAt: -1,
+    })
+    .then((comments) => {
+      return res.status(200).json(comments);
     })
     .catch((err) => {
       return res.status(500).json({ error: err.message });
