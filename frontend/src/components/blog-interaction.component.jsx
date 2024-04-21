@@ -1,12 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { BlogContext } from "../pages/blog.page";
 import { Link } from "react-router-dom";
 import { UserContext } from "../App";
 import { Toaster, toast } from "react-hot-toast";
+import axios from "axios";
+
 const BlogInteraction = () => {
   let {
     blog,
     blog: {
+      _id,
       title,
       blog_id,
       activity,
@@ -16,40 +19,89 @@ const BlogInteraction = () => {
       },
     },
     setBlog,
-    islikeByUser,
+    islikedByUser,
     setLikeByUser,
+    setCommentsWrapper,
   } = useContext(BlogContext);
 
   let {
     userAuth: { username, access_token },
   } = useContext(UserContext);
 
-  const handleLike = () => {
-    if(access_token){
-        setLikeByUser(preVal => !preVal)
-        
-        !islikeByUser ? total_likes++ : total_likes--
-        setBlog({...blog, activity: {...activity, total_likes}})
+  useEffect(() => {
+    if (access_token) {
+      axios
+        .post(
+          import.meta.env.VITE_SERVER_DOMAIN + "/isliked-by-user",
+          { _id },
+          {
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+            },
+          }
+        )
+        .then(({ data: { result } }) => {
+          setLikeByUser(Boolean(result));
+          console.log(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-    else{
-        toast.error("chua login")
+  }, []);
+
+  const handleLike = () => {
+    if (access_token) {
+      setLikeByUser((preVal) => !preVal);
+
+      !islikedByUser ? total_likes++ : total_likes--;
+      setBlog({ ...blog, activity: { ...activity, total_likes } });
+
+      axios
+        .post(
+          import.meta.env.VITE_SERVER_DOMAIN + "/like-blog",
+          { _id, islikedByUser },
+          {
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+            },
+          }
+        )
+        .then(({ data }) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      toast.error("chua login");
     }
   };
 
   return (
     <>
-    <Toaster />
+      <Toaster />
       <hr className="my-2 border-grey" />
       <div className="flex gap-6 justify-between">
         <div className="flex gap-3 items-center">
           <button
             onClick={handleLike}
-            className={"w-10 h-10 rounded-full items-center justify-center " + ( islikeByUser ? "bg-red/20 text-red" : "bg-grey/80")}
+            className={
+              "w-10 h-10 rounded-full items-center justify-center " +
+              (islikedByUser ? "bg-red/20 text-red" : "bg-grey/80")
+            }
           >
-            <i className={"fi " + ( islikeByUser ? "fi-sr-heart" : "fi-rr-heart")}></i>
+            <i
+              className={
+                "fi " + (islikedByUser ? "fi-sr-heart" : "fi-rr-heart")
+              }
+            ></i>
           </button>
           <p className="text-xl text-dark-grey">{total_likes}</p>
-          <button className="w-10 h-10 rounded-full items-center justify-center bg-grey/80">
+          <button
+            onClick={() => setCommentsWrapper(preVal => !preVal)}
+            className="w-10 h-10 rounded-full items-center justify-center bg-grey/80"
+          >
             <i className="fi fi-rr-comment-dots"></i>
           </button>
           <p className="text-xl text-dark-grey">{total_comments}</p>
