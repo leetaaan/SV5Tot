@@ -119,7 +119,7 @@ const UserAuthForm = ({ type }) => {
             type="submit"
             onClick={handleSubmit}
           >
-            {type.replace("-", " ")}
+            Đăng nhập
           </button>
           <div
             className="relative w-full flex items-center gap-2 my-10 
@@ -135,12 +135,7 @@ const UserAuthForm = ({ type }) => {
             Tiếp tục bằng Google
           </button>
           {type === "sign-in" ? (
-            <p className="mt-6 text-dark-grey text-xl text-center">
-              Không có tài khoản ?
-              <Link to="/signup" className="underline text-black text-xl ml-1">
-                Đăng ký ngay
-              </Link>
-            </p>
+            ""
           ) : (
             <p className="mt-6 text-dark-grey text-xl text-center">
               Đã có tài khoản ?

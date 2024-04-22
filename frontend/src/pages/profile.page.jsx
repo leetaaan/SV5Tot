@@ -18,7 +18,10 @@ export const profileDataStructure = {
         fullname: "",
         username: "",
         profile_img: "",
-        bio: ""
+        bio: "",
+        clas: "",
+        faculty: "",
+        dateOfBirth: ""
     },
     account_info: {
         total_posts: 0,

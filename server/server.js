@@ -9,7 +9,6 @@ import admin from "firebase-admin";
 import serviceAccountKey from "./sinh-vien-5tot-firebase-adminsdk-355hd-ac4e4aa098.json" assert { type: "json" };
 import { getAuth } from "firebase-admin/auth";
 
-import Event from "./Schema/Event.js";
 import User from "./Schema/User.js";
 import Blog from "./Schema/Blog.js";
 import Notification from "./Schema/Notification.js";
@@ -205,7 +204,7 @@ server.post("/search-users", (req, res) => {
   User.find({ "personal_info.username": new RegExp(query, "i") })
     .limit(50)
     .select(
-      "personal_info.fullname personal_info.username personal_info.profile_img -_id"
+      "personal_info.fullname personal_info.username personal_info.profile_img personal_info.class personal_info.faculty -_id"
     )
     .then((users) => {
       return res.status(200).json({ users });
@@ -792,62 +791,65 @@ server.post("/get-blog-comments", (req, res) => {
       return res.status(500).json({ error: err.message });
     });
 });
-//sv 5 tot
-server.post("/create-event", verifyJWT, (req, res) => {
-  let authorId = req.user;
-  let { title, des, banner, content } = req.body;
-  if (!title.length) {
-    return res.status(403).json({ error: "Bạn phải cung cấp tiêu đề để đăng" });
-  }
-  if (!des.length || des.length > 200) {
-    return res
-      .status(403)
-      .json({ error: "Bạn phải cung cấp mô tả dưới 200 ký tự để đăng" });
-  }
-  if (!banner.length) {
-    return res.status(403).json({ error: "Bạn phải cung cấp banner để đăng" });
-  }
-  if (!content.blocks.length) {
-    return res
-      .status(403)
-      .json({ error: "Bạn phải cung cấp nội dung để đăng" });
-  }
-  let event_id =
-    title
-      .replace(/[^a-zA-Z0-9]/g, " ")
-      .replace(/\s+/g, "-")
-      .trim() + nanoid();
-  let event = new Event({
-    title,
-    des,
-    banner,
-    content,
-    author: authorId,
-    event_id,
-  });
 
-  event
-    .save()
-    .then((event) => {
-      User.findOneAndUpdate(
-        { _id: authorId },
-        {
-          $push: { events: event._id },
-        }
-      )
-        .then((user) => {
-          return res.status(200).json({ id: event.event_id });
-        })
-        .catch((err) => {
-          return res
-            .status(500)
-            .json({ error: "Cập nhật tổng số bài viết không thành công" });
-        });
-    })
-    .catch((err) => {
-      return res.status(500).json({ error: err.message });
-    });
-});
+
+
+//sv 5 tot
+// server.post("/create-event", verifyJWT, (req, res) => {
+//   let authorId = req.user;
+//   let { title, des, banner, content } = req.body;
+//   if (!title.length) {
+//     return res.status(403).json({ error: "Bạn phải cung cấp tiêu đề để đăng" });
+//   }
+//   if (!des.length || des.length > 200) {
+//     return res
+//       .status(403)
+//       .json({ error: "Bạn phải cung cấp mô tả dưới 200 ký tự để đăng" });
+//   }
+//   if (!banner.length) {
+//     return res.status(403).json({ error: "Bạn phải cung cấp banner để đăng" });
+//   }
+//   if (!content.blocks.length) {
+//     return res
+//       .status(403)
+//       .json({ error: "Bạn phải cung cấp nội dung để đăng" });
+//   }
+//   let event_id =
+//     title
+//       .replace(/[^a-zA-Z0-9]/g, " ")
+//       .replace(/\s+/g, "-")
+//       .trim() + nanoid();
+//   let event = new Event({
+//     title,
+//     des,
+//     banner,
+//     content,
+//     author: authorId,
+//     event_id,
+//   });
+
+//   event
+//     .save()
+//     .then((event) => {
+//       User.findOneAndUpdate(
+//         { _id: authorId },
+//         {
+//           $push: { events: event._id },
+//         }
+//       )
+//         .then((user) => {
+//           return res.status(200).json({ id: event.event_id });
+//         })
+//         .catch((err) => {
+//           return res
+//             .status(500)
+//             .json({ error: "Cập nhật tổng số bài viết không thành công" });
+//         });
+//     })
+//     .catch((err) => {
+//       return res.status(500).json({ error: err.message });
+//     });
+// });
 
 server.listen(PORT, () => {
   console.log("listening on port" + PORT);

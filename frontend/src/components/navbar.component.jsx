@@ -62,9 +62,9 @@ const Navbar = () => {
             <i className="fi fi-rr-search text-2xl"></i>
           </button>
         </div>
-        <Link to="/event" className="hidden lg:flex gap-2 link">
-        <i className="fi fi-rr-pennant"></i>
-          <p>Tham gia "Sinh viên 5 tốt"</p>
+        <Link to="/editor" className="hidden lg:flex gap-2 link">
+          <i className="fi fi-rr-file-edit"></i>
+          <p>Tạo bài viết"</p>
         </Link>
         {access_token ? 
           <>

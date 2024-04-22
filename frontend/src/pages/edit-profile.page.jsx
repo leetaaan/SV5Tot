@@ -13,25 +13,28 @@ const EditProfile = () => {
   let {
     userAuth,
     userAuth: { access_token },
-    setUserAuth
+    setUserAuth,
   } = useContext(UserContext);
 
   let bioLimit = 150;
 
-  let profileImgEle = useRef()
-  let editProfileForm = useRef()
+  let profileImgEle = useRef();
+  let editProfileForm = useRef();
 
   const [profile, setProfile] = useState(profileDataStructure);
   const [loading, setLoading] = useState(true);
   const [characterLeft, setCharacterLeft] = useState(bioLimit);
   const [updatedProfileImg, setUpdatedProfileImg] = useState(null);
-  
+
   let {
     personal_info: {
       fullname,
       username: profile_username,
       profile_img,
       email,
+      clas,
+      faculty,
+      dateOfBirth,
       bio,
     },
     social_links,
@@ -58,68 +61,75 @@ const EditProfile = () => {
   };
 
   const handleImagePreview = (e) => {
-    let img = e.target.files[0]
+    let img = e.target.files[0];
 
-    profileImgEle.current.src = URL.createObjectURL(img)
+    profileImgEle.current.src = URL.createObjectURL(img);
 
-    setUpdatedProfileImg(img)
-  }
+    setUpdatedProfileImg(img);
+  };
 
   const handleImageUpload = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if(updatedProfileImg){
+    if (updatedProfileImg) {
       let loadingToast = toast.loading("Đang tải lên....");
       e.target.setAttribute("disabled", true);
 
       uploadToCloudinary(updatedProfileImg)
-      .then(url => {
-        if (url) {
-          axios.post(
-            import.meta.env.VITE_SERVER_DOMAIN + "/update-profile-img",
-            { url },
-            {
-              headers: {
-                'Authorization': `Bearer ${access_token}`,
-              },
-            }
-          )
-          .then(({ data }) => {
-              let newUserAuth = { ...userAuth, profile_img: data.profile_img}
+        .then((url) => {
+          if (url) {
+            axios
+              .post(
+                import.meta.env.VITE_SERVER_DOMAIN + "/update-profile-img",
+                { url },
+                {
+                  headers: {
+                    Authorization: `Bearer ${access_token}`,
+                  },
+                }
+              )
+              .then(({ data }) => {
+                let newUserAuth = {
+                  ...userAuth,
+                  profile_img: data.profile_img,
+                };
 
-              storeInSession("user", JSON.stringify(newUserAuth))
-              setUserAuth(newUserAuth)
+                storeInSession("user", JSON.stringify(newUserAuth));
+                setUserAuth(newUserAuth);
 
-              setUpdatedProfileImg (null);
+                setUpdatedProfileImg(null);
 
-              toast.dismiss(loadingToast);
-              e.target.removeAttribute("disabled");
-              toast.success("Đã tải ảnh");
-          })
-          .catch(({ response }) => {
-              toast.dismiss(loadingToast);
-              e.target.removeAttribute("disabled");
-              toast.error(response.data.error);
-          })
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+                toast.dismiss(loadingToast);
+                e.target.removeAttribute("disabled");
+                toast.success("Đã tải ảnh");
+              })
+              .catch(({ response }) => {
+                toast.dismiss(loadingToast);
+                e.target.removeAttribute("disabled");
+                toast.error(response.data.error);
+              });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-  }
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    let form = new FormData(editProfileForm.current)
-    let formData = { }
+    let form = new FormData(editProfileForm.current);
+    let formData = {};
 
     for (let [key, value] of form.entries()) {
       formData[key] = value;
     }
     let {
       username,
+      clas,
+      faculty,
+      dateOfBirth,
       bio,
       youtube,
       facebook,
@@ -139,43 +149,47 @@ const EditProfile = () => {
     let loadingToast = toast.loading("Đang tải lên....");
     e.target.setAttribute("disabled", true);
 
-    axios.post(
-      import.meta.env.VITE_SERVER_DOMAIN + "/update-profile",
-      {
-        username,
-        bio,
-        social_links: {
-          youtube,
-          facebook,
-          twitter,
-          github,
-          instagram,
-          website,
+    axios
+      .post(
+        import.meta.env.VITE_SERVER_DOMAIN + "/update-profile",
+        {
+          username,
+          clas,
+          faculty,
+          dateOfBirth,
+          bio,
+          social_links: {
+            youtube,
+            facebook,
+            twitter,
+            github,
+            instagram,
+            website,
+          },
         },
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${access_token}`,
-        },
-      }
-    )
-    .then(({ data }) => {
-      if(userAuth.username != data.username){
-        let newUserAuth = { ...userAuth, username: data.username}
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      )
+      .then(({ data }) => {
+        if (userAuth.username != data.username) {
+          let newUserAuth = { ...userAuth, username: data.username };
 
-        storeInSession("user", JSON.stringify(newUserAuth));
-        setUserAuth(newUserAuth);
-      }
-      toast.dismiss(loadingToast)
-      e.target.removeAttribute("disabled")
-      toast.success("Đã cập nhật thông tin")
-    })
-    .catch(({ response }) => {
-      toast.dismiss(loadingToast)
-      e.target.removeAttribute("disabled")
-      toast.error(response.data.error)
-    })
-  }
+          storeInSession("user", JSON.stringify(newUserAuth));
+          setUserAuth(newUserAuth);
+        }
+        toast.dismiss(loadingToast);
+        e.target.removeAttribute("disabled");
+        toast.success("Đã cập nhật thông tin");
+      })
+      .catch(({ response }) => {
+        toast.dismiss(loadingToast);
+        e.target.removeAttribute("disabled");
+        toast.error(response.data.error);
+      });
+  };
 
   return (
     <AnimationWrapper>
@@ -207,7 +221,10 @@ const EditProfile = () => {
                 hidden
                 onChange={handleImagePreview}
               />
-              <button onClick={handleImageUpload} className="btn-light mt-5 max-lg:center lg:w-full px-10">
+              <button
+                onClick={handleImageUpload}
+                className="btn-light mt-5 max-lg:center lg:w-full px-10"
+              >
                 Tải ảnh lên
               </button>
             </div>
@@ -241,12 +258,34 @@ const EditProfile = () => {
                 name="username"
                 type="text"
                 value={profile_username}
+                disable={true}
                 placeholer="Tên tài khoản"
                 icon="fi-rr-at"
               />
-              <p className="-mt-3 text-dark-grey">
-                Tên tài khoản sẽ được dùng để tìm kiếm tài khoản
-              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 md:gap-5">
+                <div className="">
+                  <InputBox
+                    name="clas"
+                    type="text"
+                    value={clas}
+                    placeholer="Lớp"
+                    disable={true}
+                    icon="fi-rr-book-alt"
+                  />
+                </div>
+
+                <div className="">
+                  <InputBox
+                    name="faculty"
+                    type="text"
+                    value={faculty}
+                    placeholer="Khoa"
+                    disable={true}
+                    icon="fi-rr-graduation-cap"
+                  />
+                </div>
+              </div>
 
               <textarea
                 name="bio"
@@ -274,12 +313,21 @@ const EditProfile = () => {
                       type="text"
                       value={link}
                       placeholer="https://"
-                      icon={ "fi " + (key != 'website' ? "fi-brands-" + key : "fi-rr-globe")}
+                      icon={
+                        "fi " +
+                        (key != "website" ? "fi-brands-" + key : "fi-rr-globe")
+                      }
                     />
                   );
                 })}
               </div>
-              <button onClick={handleSubmit} className="btn-dark w-auto px-10" type="submit">Cập nhật</button>
+              <button
+                onClick={handleSubmit}
+                className="btn-dark w-auto px-10"
+                type="submit"
+              >
+                Cập nhật
+              </button>
             </div>
           </div>
         </form>
