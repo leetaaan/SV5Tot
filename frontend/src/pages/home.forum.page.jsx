@@ -16,7 +16,7 @@ const HomeForumPage = () => {
   let [trendingBlogs, setTrendingBlogs] = useState(null);
   let [pageState, setPageState] = useState("Bài viết mới nhất");
 
-  let categories = [ "tag 1", "test", "1", "test 3", "test 4", "test 5", "test 6", "test 7" ]
+  let categories = [ "tag 1", "test", "1", "2", "3", "tan", "test 6", "test 7" ]
 
   const fetchLatestBlogs = ( {page = 1} ) => {
     axios
@@ -28,7 +28,6 @@ const HomeForumPage = () => {
           page,
           countRoute: "/all-latest-blogs-count",
         })
-        console.log(formatData);
         setBlogs(formatData)
       })
       .catch((err) => {

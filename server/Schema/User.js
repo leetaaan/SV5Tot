@@ -51,17 +51,14 @@ const userSchema = mongoose.Schema(
       },
       clas: {
         type: String,
-        required: true,
         lowercase: true,
       },
       faculty: {
         type: String,
-        required: true,
         lowercase: true,
       },
       dateOfBirth: {
         type: Date,
-        required: true,
         validate: {
           validator: (date) => date instanceof Date && !isNaN(date.getTime()),
           message: "Invalid date of birth",
@@ -132,6 +129,11 @@ const userSchema = mongoose.Schema(
       ref: "blogs",
       default: [],
     },
+    role: {
+      type: String,
+      enum: ["Quản trị viên", "Sinh viên", "Chi hội trưởng","Liên chi hội trưởng", "Hội sinh viên trường"],
+      default: "Sinh viên",
+    }
   },
   {
     timestamps: {

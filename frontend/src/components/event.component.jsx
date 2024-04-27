@@ -93,6 +93,7 @@ const EventEditor = () => {
           {title.length ? title : `Tham gia "Sinh viên 5 tốt"`}
         </p>
         <div className="flex gap-4 ml-auto">
+          <Link className="btn-light py-2 flex gap-2" to={"https://docs.google.com/spreadsheets/d/1K3o7e34cjtUirNcHlQkdYYBXNr78gDRv/edit#gid=25855763"}> <p>Thông tin tiêu chuẩn</p> <i className="fi fi-rr-info"></i></Link>
           <button className="btn-dark py-2" onClick={handlePushlish}>Đăng</button>
         </div>
       </nav>
