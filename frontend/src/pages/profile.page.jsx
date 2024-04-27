@@ -37,7 +37,7 @@ const ProfilePage = () => {
     let [ blogs, setBlogs ] = useState(null)
     let [ profileLoader, setProfileLoader ] = useState("")
 
-    let { personal_info: { fullname, username: profile_username, profile_img, bio},
+    let { personal_info: { fullname, username: profile_username, profile_img, bio, clas, faculty, dateOfBirth},
     account_info: { total_posts,total_reads }, social_links, joinedAt } = profile
 
     let { userAuth: { username }} = useContext(UserContext)
