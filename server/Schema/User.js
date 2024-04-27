@@ -53,6 +53,14 @@ const userSchema = mongoose.Schema(
         type: String,
         lowercase: true,
       },
+      gender: {
+        type: String,
+        enum: {
+          values: ["Male", "Female"],
+          message: "{VALUE} is not supported",
+        },
+        required: true,
+      },
       faculty: {
         type: String,
         lowercase: true,

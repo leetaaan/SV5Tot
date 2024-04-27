@@ -1,0 +1,22 @@
+.navbar-icon{
+
+    &--style{
+        padding: 8px;
+        margin-right: 0.25rem;
+        border-radius: 50%;
+        font-size: 1rem;
+        color: var(--primary-color);
+        background-color: #fff;
+        cursor: pointer;
+    }
+}
+
+.ant-btn:hover{
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.ant-typography{
+ color: var(--primary-color)!important;
+ text-transform: uppercase;
+}

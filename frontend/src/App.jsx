@@ -14,6 +14,7 @@ import BlogPage from "./pages/blog.page";
 import SideNav from "./components/sidenavbar.component";
 import ChangePassword from "./pages/change-password.page";
 import EditProfile from "./pages/edit-profile.page";
+import Admin from "./pages/admin/admin";
 
 export const UserContext = createContext({});
 
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="blog/:blog_id" element={<BlogPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
+        <Route path="/admin" element={<Admin/>}/>
       </Routes>
     </UserContext.Provider>
   );
