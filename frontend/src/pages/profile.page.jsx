@@ -37,7 +37,7 @@ const ProfilePage = () => {
     let [ blogs, setBlogs ] = useState(null)
     let [ profileLoader, setProfileLoader ] = useState("")
 
-    let { personal_info: { fullname, username: profile_username, profile_img, bio},
+    let { personal_info: { fullname, username: profile_username, profile_img, bio, clas, faculty},
     account_info: { total_posts,total_reads }, social_links, joinedAt } = profile
 
     let { userAuth: { username }} = useContext(UserContext)
@@ -103,6 +103,7 @@ const ProfilePage = () => {
                         <img src={profile_img} className="w-48 h-48 bg-grey rounded-full md:w-32 md:h-32" />
                         <h1 className='text-2xl font-medium'>@{profile_username}</h1>
                         <p className='text-xl capitalize h-6'>{fullname}</p>
+                        <p className='text-xl capitalize h-6'>{faculty} - {clas}</p>
                         <p>{total_posts.toLocaleString()} Bài viết - {total_reads.toLocaleString()} Đã đọc bài viết</p>
 
                         <div className="flex gap-4 mt-2">

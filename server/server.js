@@ -56,6 +56,10 @@ const formatDatatoSend = (user) => {
     profile_img: user.personal_info.profile_img,
     username: user.personal_info.username,
     fullname: user.personal_info.fullname,
+    clas: user.personal_info.clas,
+    faculty: user.personal_info.faculty,
+    dateOfBirth: user.personal_info.dateOfBirth,
+    role: user.personal_info.role
   };
 };
 
@@ -100,6 +104,7 @@ server.post("/signup", (req, res) => {
         clas,
         faculty,
         dateOfBirth,
+        role
       },
     });
 
@@ -864,14 +869,13 @@ server.post("/notifications", verifyJWT, (req, res) => {
     .populate("reply", "comment")
     .sort({ createdAt: -1 })
     .select("createdAt type seem reply")
-    .then(notifications => {
-      return res.status(200).json({ notifications })
+    .then((notifications) => {
+      return res.status(200).json({ notifications });
     })
-    .catch(err => {
-      return res.status(500).json({ error: err.message})
-    })
-
-})
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
 
 server.post("/all-notifications-count", verifyJWT, (req, res) => {
   let user_id = req.id;
@@ -884,13 +888,13 @@ server.post("/all-notifications-count", verifyJWT, (req, res) => {
   }
 
   Notification.countDocuments(findQuery)
-  .then(count => {
-    return res.status(200).json({ totalDocs: count })
-  })
-  .catch(err => {
-    return res.status(500).json({ error: err.message})
-  })
-})
+    .then((count) => {
+      return res.status(200).json({ totalDocs: count });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
 //sv 5 tot
 // server.post("/create-event", verifyJWT, (req, res) => {
 //   let authorId = req.user;

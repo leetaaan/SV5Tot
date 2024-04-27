@@ -72,6 +72,11 @@ const userSchema = mongoose.Schema(
           message: "Invalid date of birth",
         },
       },
+      role: {
+        type: String,
+        enum: ["Quản trị viên", "Sinh viên", "Chi hội trưởng","Liên chi hội trưởng", "Hội sinh viên trường", "Câu lạc bộ"],
+        default: "Sinh viên",
+      },
       bio: {
         type: String,
         maxlength: [200, "Bio should not be more than 200"],
@@ -137,11 +142,6 @@ const userSchema = mongoose.Schema(
       ref: "blogs",
       default: [],
     },
-    role: {
-      type: String,
-      enum: ["Quản trị viên", "Sinh viên", "Chi hội trưởng","Liên chi hội trưởng", "Hội sinh viên trường"],
-      default: "Sinh viên",
-    }
   },
   {
     timestamps: {

@@ -8,11 +8,12 @@ import axios from "axios";
 import InputBox from "../components/input.component";
 import { uploadToCloudinary } from "../common/cloundinary";
 import { storeInSession } from "../common/session";
+import { getFullDay } from "../common/date";
 
 const EditProfile = () => {
   let {
     userAuth,
-    userAuth: { access_token },
+    userAuth: { access_token, role },
     setUserAuth,
   } = useContext(UserContext);
 
@@ -281,6 +282,17 @@ const EditProfile = () => {
                     type="text"
                     value={faculty}
                     placeholer="Khoa"
+                    disable={true}
+                    icon="fi-rr-graduation-cap"
+                  />
+                </div>
+
+                <div className="">
+                  <InputBox
+                    name="dateOfBirth"
+                    type="date"
+                    value={getFullDay(dateOfBirth)}
+                    placeholer="Ngày sinh"
                     disable={true}
                     icon="fi-rr-graduation-cap"
                   />
