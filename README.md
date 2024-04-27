@@ -1,7 +1,7 @@
 # SV5Tot
 Để chạy vui lòng mở 2 terminal
 
-## Run Server
+## 1. Run Server
 ```bash
 cd server
 ```
@@ -9,7 +9,7 @@ cd server
 #npm start
 ```
 
-## Run Frontend
+## 2. Run Frontend
 ```bash
 cd frontend
 ```
