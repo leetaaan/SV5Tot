@@ -20,7 +20,7 @@ const BlogInteraction = () => {
     },
     setBlog,
     islikedByUser,
-    setLikeByUser,
+    setLikedByUser,
     setCommentsWrapper,
   } = useContext(BlogContext);
 
@@ -41,8 +41,7 @@ const BlogInteraction = () => {
           }
         )
         .then(({ data: { result } }) => {
-          setLikeByUser(Boolean(result));
-          console.log(result);
+          setLikedByUser(Boolean(result));
         })
         .catch((err) => {
           console.log(err);
@@ -52,7 +51,7 @@ const BlogInteraction = () => {
 
   const handleLike = () => {
     if (access_token) {
-      setLikeByUser((preVal) => !preVal);
+      setLikedByUser((preVal) => !preVal);
 
       !islikedByUser ? total_likes++ : total_likes--;
       setBlog({ ...blog, activity: { ...activity, total_likes } });
@@ -68,7 +67,6 @@ const BlogInteraction = () => {
           }
         )
         .then(({ data }) => {
-          console.log(data);
         })
         .catch((err) => {
           console.log(err);

@@ -73,7 +73,7 @@ const generateUsername = async (email) => {
 
 //user
 server.post("/signup", (req, res) => {
-  let { fullname, email, password } = req.body;
+  let { fullname, email, password, clas, faculty, dateOfBirth } = req.body;
 
   if (fullname.length < 5) {
     return res.status(403).json({ Lỗi: "Họ và tên phải nhiều hơn 5 ký tự" });
@@ -92,7 +92,15 @@ server.post("/signup", (req, res) => {
   bcrypt.hash(password, 10, async (err, hashed_password) => {
     let username = await generateUsername(email);
     let user = new User({
-      personal_info: { fullname, email, password: hashed_password, username },
+      personal_info: {
+        fullname,
+        email,
+        password: hashed_password,
+        username,
+        clas,
+        faculty,
+        dateOfBirth,
+      },
     });
 
     user
@@ -176,7 +184,14 @@ server.post("/google-auth", async (req, res) => {
         let username = await generateUsername(email);
 
         user = new User({
-          personal_info: { fullname: name, email, username },
+          personal_info: {
+            fullname: name,
+            email,
+            username,
+            clas,
+            faculty,
+            dateOfBirth,
+          },
           google_auth: true,
         });
         await user
@@ -271,12 +286,10 @@ server.post("/change-password", verifyJWT, (req, res) => {
                 return res.status(200).json({ status: "Đã đổi mật khẩu" });
               })
               .catch((err) => {
-                return res
-                  .status(500)
-                  .json({
-                    error:
-                      "Đã có lỗi xảy ra khi lưu mật khẩu mới, vui lòng thử lại",
-                  });
+                return res.status(500).json({
+                  error:
+                    "Đã có lỗi xảy ra khi lưu mật khẩu mới, vui lòng thử lại",
+                });
               });
           });
         }
@@ -299,7 +312,7 @@ server.post("/update-profile-img", verifyJWT, (req, res) => {
 });
 
 server.post("/update-profile", verifyJWT, (req, res) => {
-  let { username, bio, social_links } = req.body;
+  let { username, bio, clas, faculty, dateOfBirth, social_links } = req.body;
   let bioLimit = 150;
   if (username.length < 3) {
     return res
@@ -318,8 +331,13 @@ server.post("/update-profile", verifyJWT, (req, res) => {
       if (social_links[socialLinksArr[i]].length) {
         let hostname = new URL(social_links[socialLinksArr[i]]).hostname;
 
-        if(!hostname.includes(`${socialLinksArr[i]}.com`) && socialLinksArr[i] != 'website'){
-          return res.status(403).json({ error: `${socialLinksArr[i]} không đúng. Vui lòng thử lại`})
+        if (
+          !hostname.includes(`${socialLinksArr[i]}.com`) &&
+          socialLinksArr[i] != "website"
+        ) {
+          return res.status(403).json({
+            error: `${socialLinksArr[i]} không đúng. Vui lòng thử lại`,
+          });
         }
       }
     }
@@ -332,20 +350,25 @@ server.post("/update-profile", verifyJWT, (req, res) => {
   let updateObj = {
     "personal_info.username": username,
     "personal_info.bio": bio,
+    "personal_info.clas": clas,
+    "personal_info.faculty": faculty,
+    "personal_info.dateOfBirth": dateOfBirth,
     social_links,
   };
   User.findOneAndUpdate({ _id: req.user }, updateObj, {
     runValidators: true,
   })
-  .then(() => {
-    return res.status(200).json({ username })
+    .then(() => {
+      return res.status(200).json({ username });
     })
-    .catch(err => {
-    if(err.code == 11000){
-    return res.status(409).json({ error: "Tên tài khoản đã được người khác sử dụng" })
-    }
-    return res.status(500).json({ error: err.message })
-    })
+    .catch((err) => {
+      if (err.code == 11000) {
+        return res
+          .status(409)
+          .json({ error: "Tên tài khoản đã được người khác sử dụng" });
+      }
+      return res.status(500).json({ error: err.message });
+    });
 });
 
 // blog
@@ -656,7 +679,7 @@ server.post("/add-comment", verifyJWT, (req, res) => {
     });
 
     let notificationObj = {
-      type: replying_to ? "reply" : "comment",
+      type: replying_to ? "Thích" : "Bình luận",
       blog: _id,
       notification_for: blog_author,
       user: user_id,
@@ -792,8 +815,82 @@ server.post("/get-blog-comments", (req, res) => {
     });
 });
 
+//notification
+server.get("/new-notification", verifyJWT, (req, res) => {
+  let user_id = req.user;
+  Notification.exists({
+    notification_for: user_id,
+    seen: false,
+    user: { $ne: user_id },
+  })
+    .then((result) => {
+      if (result) {
+        return res.status(200).json({ new_notification_available: true });
+      } else {
+        return res.status(200).json({ new_notification_available: false });
+      }
+    })
+    .catch((err) => {
+      console.log(err.message);
+      return res.status(500).json({ error: err.message });
+    });
+});
 
+server.post("/notifications", verifyJWT, (req, res) => {
+  let user_id = req.id;
+  let { page, filter, deletedDocCount } = req.body;
+  let maxLimit = 10;
 
+  let findQuery = { notification_for: user_id, user: { $ne: user_id } };
+  let skipDocs = (page - 1) * maxLimit;
+
+  if (filter != "Tất cả") {
+    findQuery.type = filter;
+  }
+  if (deletedDocCount) {
+    skipDocs -= deletedDocCount;
+  }
+
+  Notification.find(findQuery)
+    .skip(skipDocs)
+    .limit(maxLimit)
+    .populate("blog", "title blog_id")
+    .populate(
+      "user",
+      "personal_info.fullname personal_info.username personal_info.profile_img"
+    )
+    .populate("comment", "comment")
+    .populate("replied_on_comment", "comment")
+    .populate("reply", "comment")
+    .sort({ createdAt: -1 })
+    .select("createdAt type seem reply")
+    .then(notifications => {
+      return res.status(200).json({ notifications })
+    })
+    .catch(err => {
+      return res.status(500).json({ error: err.message})
+    })
+
+})
+
+server.post("/all-notifications-count", verifyJWT, (req, res) => {
+  let user_id = req.id;
+  let { filter } = req.body;
+
+  let findQuery = { notification_for: user_id, user: { $ne: user_id } };
+
+  if (filter != "Tất cả") {
+    findQuery.type = filter;
+  }
+
+  Notification.countDocuments(findQuery)
+  .then(count => {
+    return res.status(200).json({ totalDocs: count })
+  })
+  .catch(err => {
+    return res.status(500).json({ error: err.message})
+  })
+})
 //sv 5 tot
 // server.post("/create-event", verifyJWT, (req, res) => {
 //   let authorId = req.user;

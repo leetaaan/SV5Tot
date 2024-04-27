@@ -43,7 +43,7 @@ const App = () => {
             <Route path="change-password" element={<ChangePassword/>} />
           </Route>
           <Route path="/signin" element={<UserAuthForm type="sign-in" />} />
-          <Route path="/signup" element={<UserAuthForm type="sign-up" />} />
+          {/* <Route path="/signup" element={<UserAuthForm type="sign-up" />} /> */}
           <Route path="search/:query" element={<SearchPage />} />
           <Route path="user/:id" element={<ProfilePage />} />
           <Route path="blog/:blog_id" element={<BlogPage />} />
