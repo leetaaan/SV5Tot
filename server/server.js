@@ -59,7 +59,8 @@ const formatDatatoSend = (user) => {
     clas: user.personal_info.clas,
     faculty: user.personal_info.faculty,
     dateOfBirth: user.personal_info.dateOfBirth,
-    role: user.personal_info.role
+    role: user.personal_info.role,
+    gender: user.personal_info.gender
   };
 };
 
@@ -77,7 +78,7 @@ const generateUsername = async (email) => {
 
 //user
 server.post("/signup", (req, res) => {
-  let { fullname, email, password, clas, faculty, dateOfBirth } = req.body;
+  let { fullname, email, password, clas, faculty, dateOfBirth, gender, role } = req.body;
 
   if (fullname.length < 5) {
     return res.status(403).json({ Lỗi: "Họ và tên phải nhiều hơn 5 ký tự" });
@@ -102,6 +103,7 @@ server.post("/signup", (req, res) => {
         password: hashed_password,
         username,
         clas,
+        gender,
         faculty,
         dateOfBirth,
         role

@@ -26,7 +26,7 @@ const BlogEditor = () => {
         holderId: "textEditor",
         data: Array.isArray(content) ? content[0] : content,
         tools: tools,
-        placeholder: "Viết gì đó"
+        placeholder: "Viết nội dung"
       }))
     }
   }, [])

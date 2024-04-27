@@ -1,5 +1,4 @@
 import Embed from "@editorjs/embed";
-import Table from "@editorjs/table";
 import List from "@editorjs/list";
 import Image from "@editorjs/image";
 import Header from "@editorjs/header";
@@ -36,16 +35,7 @@ const uploadImageByUrl = (e) => {
 };
 
 export const tools = {
-  table: Table,
-  embed: {
-    class: Embed,
-    config: {
-      services: {
-        youtube: true,
-        coub: true,
-      },
-    },
-  },
+  embed: Embed,
   list: {
     class: List,
     inlineToolbar: true,

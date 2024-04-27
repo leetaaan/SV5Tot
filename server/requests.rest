@@ -1,15 +1,16 @@
 # token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MmJiYTY2NmQ3ZDE3Mjg1MzUxYzU2MyIsImlhdCI6MTcxNDE2MDY2MH0.iqVedrNysTUThJ7XEcd-DBldbYSbTDi1UNeB7xQSr6Q
-POST http://localhost:3000/signin
+POST http://localhost:3000/signup
 Content-Type: application/json
 
 {
     "fullname": "Lê Tân",
-    "email": "201146@dlu.edu.vn",
+    "email": "2011436@dlu.edu.vn",
     "password": "LeTan12345",
     "clas": "CTK44A",
     "faculty": "CNTT",
     "dateOfBirth": "2002/02/20",
-    "role": "Sinh viên"
+    "role": "Sinh viên",
+    "gender": "Male"
 }
 
 # POST http://localhost:3000/change-password

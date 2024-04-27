@@ -16,7 +16,7 @@ const HomeForumPage = () => {
   let [trendingBlogs, setTrendingBlogs] = useState(null);
   let [pageState, setPageState] = useState("Bài viết mới nhất");
 
-  let categories = [ "tag 1", "test", "1", "2", "3", "tan", "test 6", "test 7" ]
+  let categories = [ "đạo đức tốt", "học tập tốt", "thể thao tốt", "tình nguyện tốt", "hội nhập tốt", "ctk44", "cntt", "dlu" ]
 
   const fetchLatestBlogs = ( {page = 1} ) => {
     axios

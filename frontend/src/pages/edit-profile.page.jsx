@@ -140,9 +140,6 @@ const EditProfile = () => {
       website,
     } = formData;
 
-    if (username.length < 3) {
-      return toast.error("Tên tài khoản phải ít nhất 3 ký tự");
-    }
     if (bio.length > bioLimit) {
       return toast.error(`Mô tả không thể nhiều hơn ${bioLimit} ký tự`);
     }
@@ -259,7 +256,7 @@ const EditProfile = () => {
                 name="username"
                 type="text"
                 value={profile_username}
-                disable={true}
+                disable={true }
                 placeholer="Tên tài khoản"
                 icon="fi-rr-at"
               />
