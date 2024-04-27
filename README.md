@@ -1,5 +1,5 @@
 # SV5Tot
-Để chạy vui lòng mở 2 terminal
+Để chạy yêu cầu mở 2 terminal
 
 ## 1. Run Server
 ```bash
@@ -15,4 +15,15 @@ cd frontend
 ```
 ```bash
 #npm run dev
+```
+
+## Tài khoản mẫu
+```python
+# Admin
+201146@dlu.edu.vn
+LeTan12345
+# User
+2011436@dlu.edu.vn
+LeTan12345
+
 ```
