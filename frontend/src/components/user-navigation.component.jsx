@@ -34,9 +34,6 @@ const UserNavigationPanel = () => {
         <Link to={`/user/${username}`} className="link pl-8 py-4">
           Hồ sơ
         </Link>
-        <Link to="/dashboard" className="link pl-8 py-4">
-          Quản lý
-        </Link>
         <Link to="/settings/edit-profile" className="link pl-8 py-4">
           Cài đặt
         </Link>
