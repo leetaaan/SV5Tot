@@ -1,17 +1,25 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../App";
 import { filterPaginationData } from "../common/filter-pagination-data";
+import axios from "axios";
+import Loader from "../components/loader.component";
+import AnimationWrapper from "../common/page-animation";
+import NodataMessage from "../components/nodata.component";
+import NotificationCard from "../components/notification-card.component";
+import LoadMoreDataBtn from "../components/load-more.component";
 
 const Notifications = () => {
 
   let {
-    userAuth: { access_token },
+    userAuth,
+    userAuth: { access_token, new_notification_available },
+    setUserAuth
   } = useContext(UserContext);
 
   const [filter, setFilter] = useState("Tất cả");
   const [ notifications, setNotifications ] = useState(null)
 
-  let filters = ["Tất cả", "Thích", "Bình luận", "Trả lời"];
+  let filters = ["Tất cả", "like", "comment", "reply"];
 
   const fetchNotifications = ({ page, deletedDocCount = 0 }) => {
     axios
@@ -30,6 +38,9 @@ const Notifications = () => {
       )
       .then(async ({ data: { notifications: data } }) => {
 
+        if(new_notification_available){
+          setUserAuth({ ...userAuth, new_notification_available: false})
+        }
         let formatedData = await filterPaginationData({
           state: notifications,
           data,
@@ -45,13 +56,20 @@ const Notifications = () => {
       })
   };
 
+  useEffect(() => {
+    if(access_token){
+      fetchNotifications({ page: 1})
+    }
+  },[access_token, filter])
+
   const handleFilter = (e) => {
     let btn = e.target;
     setFilter(btn.innerHTML);
+    setNotifications(null)
   };
   return (
     <div>
-      <h1 className="max-md:hidden">Thông báo gần đây</h1>
+      <h1 className="max-md:hidden">Thông báo</h1>
       <div className="my-8 flex gap-6">
         {filters.map((filterName, i) => {
           return (
@@ -67,6 +85,30 @@ const Notifications = () => {
           );
         })}
       </div>
+
+      {notifications == null ? (
+        <Loader />
+      ) : (
+        <>
+          {notifications.results.length ? (
+            notifications.results.map((notification, i) => {
+              return (
+                <AnimationWrapper key={i} transition={{ delay: i * 0.08 }}>
+                  <NotificationCard data={notification} index={i} notificationState={{notifications, setNotifications}}/>
+                </AnimationWrapper>
+              );
+            })
+          ) : (
+            <NodataMessage message="Không có thông báo" />
+          )}
+
+          <LoadMoreDataBtn
+            state={notifications}
+            fetchData={fetchNotifications}
+            additionalParam={{ deletedDocCount: notifications.deletedDocCount }}
+          />
+        </>
+      )}
     </div>
   );
 };
