@@ -7,7 +7,7 @@ import WarningModal from "../modals/warningModal";
 import InfoColumns from "../../assets/columns/infoColumn";
 import exampleData from "../../assets/json/exampleData";
 
-const UserTable = () => {
+const InfomationTable = () => {
   const [dataSource, setDataSource] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -23,7 +23,9 @@ const UserTable = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`YOUR_API_ENDPOINT?page=${currentPage}&pageSize=${pageSize}`);
+      const response = await fetch(
+        `YOUR_API_ENDPOINT?page=${currentPage}&pageSize=${pageSize}`
+      );
       const data = await response.json();
       setDataSource(data.results);
       setTotalItems(data.totalItems);
@@ -88,8 +90,8 @@ const UserTable = () => {
   };
 
   return (
-    <div className="userTable">
-      <div className="userTable__search" style={{ marginBottom: 16 }}>
+    <div className="infomationTable">
+      <div className="infomationTable__search" style={{ marginBottom: 16 }}>
         <Input
           placeholder="Tìm kiếm..."
           prefix={<SearchOutlined />}
@@ -118,7 +120,7 @@ const UserTable = () => {
         showSizeChanger
         onShowSizeChange={handleShowSizeChange}
         showQuickJumper
-        className="userTable__pagination"
+        className="infomationTable__pagination"
       />
       <UserModal
         visible={isModalVisible}
@@ -141,4 +143,4 @@ const UserTable = () => {
   );
 };
 
-export default UserTable;
+export default InfomationTable;

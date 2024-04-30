@@ -7,7 +7,7 @@ import WarningModal from "../modals/warningModal";
 import CriteriaColumns from "../../assets/columns/criteriaColumn";
 import CriteriaModal from "../modals/criteriaModal";
 import exampleCriteria from "../../assets/json/exampleCriteria";
-const CriteriaTable = () => {
+const UsersTable = () => {
   const [dataSource, setDataSource] = useState([]); //data
   const [isModalVisible, setIsModalVisible] = useState(false); //model
   const [selectedRecord, setSelectedRecord] = useState(null); //
@@ -130,4 +130,4 @@ const CriteriaTable = () => {
   );
 };
 
-export default CriteriaTable;
+export default UsersTable;

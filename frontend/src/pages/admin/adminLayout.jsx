@@ -1,35 +1,42 @@
 // Home.js
 import { Button, Layout } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useState,useEffect, Children } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import Navbar from "../../components/navbar/navbar";
 import Profile from "../../components/profile/profile";
 
 const { Sider, Header, Content } = Layout;
 
-const Admin = () => {
+const Admin = ({children}) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedComponent, setSelectedComponent] = useState(<Profile />);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const handleSelectComponent = (component) => {
-    setSelectedComponent(component);
-  };
+  
 
   const handleToggle = () => {
     setCollapsed(!collapsed);
   };
 
+  useEffect(() => {
+    const updateScroll = () => {
+      setIsScrolled(!!window.scrollY);
+    };
+    window.addEventListener("scroll", updateScroll);
+    return () => window.removeEventListener("scroll", updateScroll);
+  }, []);
+
+
   return (
     <Layout className="home">
       <Sider
-        theme="drak"
+        theme="dark"
         trigger={null}
         collapsible
         collapsed={collapsed}
         className="home__sider"
       >
-        <Sidebar onSelect={handleSelectComponent} />
+        <Sidebar/>
         <Button
           type="text"
           icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -41,7 +48,7 @@ const Admin = () => {
         <Header className="home__header">
           <Navbar />
         </Header>
-        <Content className="home__content">{selectedComponent}</Content>
+        <Content className="home__content">{children}</Content>
       </Layout>
     </Layout>
   );

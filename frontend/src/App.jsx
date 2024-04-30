@@ -5,7 +5,6 @@ import { createContext, useEffect, useState } from "react";
 import { lookInSession } from "./common/session";
 import Editor from "./pages/editor.pages";
 import HomeForumPage from "./pages/home.forum.page";
-import HomePage from "./pages/home.page";
 import SearchPage from "./pages/search.page";
 import EditorSV5Tot from "./pages/editor.sv5tot.page";
 import PageNotFound from "./pages/404.page";
@@ -14,8 +13,9 @@ import BlogPage from "./pages/blog.page";
 import SideNav from "./components/sidenavbar.component";
 import ChangePassword from "./pages/change-password.page";
 import EditProfile from "./pages/edit-profile.page";
-import Admin from "./pages/admin/admin";
-
+import Admin from "./pages/admin/adminLayout";
+import InfomationTable from "./components/infomationTable/infimationTable";
+import UsersTable from "./components/userTable/usersTable";
 export const UserContext = createContext({});
 
 const App = () => {
@@ -32,16 +32,16 @@ const App = () => {
   return (
     <UserContext.Provider value={{ userAuth, setUserAuth }}>
       <Routes>
-        <Route path="/editor" element={<Editor/>} />
-        <Route path="/editor/:blog_id" element={<Editor/>} />
+        <Route path="/editor" element={<Editor />} />
+        <Route path="/editor/:blog_id" element={<Editor />} />
 
-        <Route path="/event" element={<EditorSV5Tot/>} />
+        <Route path="/event" element={<EditorSV5Tot />} />
         {/* <Route path="/" element={<HomePage />} /> */}
         <Route path="/" element={<Navbar />}>
           <Route index element={<HomeForumPage />} />
           <Route path="settings" element={<SideNav />}>
             <Route path="edit-profile" element={<EditProfile />} />
-            <Route path="change-password" element={<ChangePassword/>} />
+            <Route path="change-password" element={<ChangePassword />} />
           </Route>
           <Route path="/signin" element={<UserAuthForm type="sign-in" />} />
           {/* <Route path="/signup" element={<UserAuthForm type="sign-up" />} /> */}
@@ -50,7 +50,47 @@ const App = () => {
           <Route path="blog/:blog_id" element={<BlogPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
-        <Route path="/admin" element={<Admin/>}/>
+        <Route path="/admin" element={<Admin />} />
+        <Route
+          path="/admin/profile"
+          element={
+            <Admin>
+              <ProfilePage />
+            </Admin>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <Admin>
+              <UsersTable />
+            </Admin>
+          }
+        />
+        <Route
+          path="/admin/students"
+          element={
+            <Admin>
+              <InfomationTable />
+            </Admin>
+          }
+        />
+        <Route
+          path="/admin/students"
+          element={
+            <Admin>
+              <InfomationTable />
+            </Admin>
+          }
+        />
+        <Route
+          path="/admin/criterias"
+          element={
+            <Admin>
+              
+            </Admin>
+          }
+        />
       </Routes>
     </UserContext.Provider>
   );

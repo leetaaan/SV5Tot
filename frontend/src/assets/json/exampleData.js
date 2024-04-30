@@ -65,52 +65,6 @@ const exampleData = [
       class: "CTK44A",
       department: "Công nghệ thông tin"
     },
-    {
-      key: 3,
-      name: "Bob Johnson",
-      birthday: "1985-08-10",
-      gender: "Male",
-      ethnic: "African American",
-      email: "bob.johnson@example.com",
-      unit: "Engineering",
-      class: "CTK44A",
-      department: "Công nghệ thông tin"
-    },
-    {
-      key: 3,
-      name: "Bob Johnson",
-      birthday: "1985-08-10",
-      gender: "Male",
-      ethnic: "African American",
-      email: "bob.johnson@example.com",
-      unit: "Engineering",
-      class: "CTK44A",
-      department: "Công nghệ thông tin"
-    },
-    {
-      key: 3,
-      name: "Bob Johnson",
-      birthday: "1985-08-10",
-      gender: "Male",
-      ethnic: "African American",
-      email: "bob.johnson@example.com",
-      unit: "Engineering",
-      class: "CTK44A",
-      department: "Công nghệ thông tin"
-    },
-    {
-      key: 3,
-      name: "Bob Johnson",
-      birthday: "1985-08-10",
-      gender: "Male",
-      ethnic: "African American",
-      email: "bob.johnson@example.com",
-      unit: "Engineering",
-      class: "CTK44A",
-      department: "Công nghệ thông tin"
-    },
-    
-    
     // Add more sample data as needed
   ];
 

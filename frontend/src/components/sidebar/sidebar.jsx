@@ -1,4 +1,3 @@
-// Sidebar.js
 import { Flex, Menu } from "antd";
 import { FaLeaf } from "react-icons/fa";
 import {
@@ -9,69 +8,51 @@ import {
   CarryOutOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import React, { useState } from "react";
-import UserTable from "../usersTable/usersTable";
-import CriteriaTable from "../criteriaTable/criteriaTable";
-import { render } from "react-dom";
-import Profile from "../profile/profile";
 
-const Sidebar = ({ onSelect }) => {
+import { Link } from "react-router-dom";
+import images from "../../assets/img";
+
+const Sidebar = () => {
   const items = [
     {
-      key: "1",
+      key: "dashboard",
       icon: <CarryOutOutlined />,
-      label: "Danh mục",
-      render: <Profile />,
+      label: (<Link to='/admin/profile' className="" title="">Danh mục</Link>),
     },
     {
-      key: "2",
+      key: "users",
       icon: <UserOutlined />,
-      label: "Thông tin sinh viên",
-      render: <UserTable />,
+      label: (<Link to='/admin/students' className="" title="">Người dùng</Link>),
+      
     },
     {
-      key: "3",
+      key: "students",
       icon: <OrderedListOutlined />,
-      label: "Thành tích sinh viên",
-      render: <CriteriaTable />,
+      label: (<Link to='/admin/users' className="" title="">Thông tin sinh viên</Link>),
     },
     {
-      key: "4",
-      icon: <SettingOutlined />,
-      label: "Quản lý tài khoản",
-    },
-    {
-      key: "5",
-      icon: <ProfileOutlined />,
-      label: "Thông tin cá nhân",
-    },
-    {
-      key: "6",
-      icon: <LogoutOutlined />,
-      label: "Logout",
+      key: "criteria",
+      icon: <OrderedListOutlined />,
+      label: (<Link to='/admin/criterias' className="" title="">Xét duyệt tiêu chí</Link>),
     },
   ];
 
-  const handleItemClick = (item) => {
-    onSelect(item.render);
-  };
+
 
   return (
     <>
       <Flex align="center" justify="center">
         <div className="sidebar__logo">
-          <FaLeaf />
+          <img src={images.logo} alt="logo"/>
         </div>
       </Flex>
       <Menu
         mode="inline"
         defaultSelectedKeys={["1"]}
-        items={items.map((item) => ({
-          ...item,
-          onClick: () => handleItemClick(item),
-        }))}
         className="sidebar__menu"
+        items = {items}
       />
+        
     </>
   );
 };

@@ -1,7 +1,7 @@
-.userTable {
-    margin: 50px 50px;
-    height: 80vh;
-    
+.infomationTable {
+  margin: 50px 50px;
+  height: 80vh;
+
   &__search {
     .ant-btn {
       background-color: var(--primary-color) !important;
@@ -11,7 +11,7 @@
       color: var(--primary-color) !important;
     }
   }
- 
+
   .ant-pagination {
     display: flex;
     justify-content: center;
@@ -19,17 +19,17 @@
     bottom: 0;
   }
 
-  .ant-table-wrapper{
+  .ant-table-wrapper {
     box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.1);
     border-radius: 1%;
   }
 
-  &__pagination{
+  &__pagination {
     margin-top: 50px;
   }
 
-  .ant-table-thead{
-    th{
+  .ant-table-thead {
+    th {
       text-transform: uppercase;
     }
   }
