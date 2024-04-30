@@ -8,11 +8,12 @@ import axios from "axios";
 import InputBox from "../components/input.component";
 import { uploadToCloudinary } from "../common/cloundinary";
 import { storeInSession } from "../common/session";
+import { getFullDay } from "../common/date";
 
 const EditProfile = () => {
   let {
     userAuth,
-    userAuth: { access_token },
+    userAuth: { access_token, role },
     setUserAuth,
   } = useContext(UserContext);
 
@@ -139,9 +140,6 @@ const EditProfile = () => {
       website,
     } = formData;
 
-    if (username.length < 3) {
-      return toast.error("Tên tài khoản phải ít nhất 3 ký tự");
-    }
     if (bio.length > bioLimit) {
       return toast.error(`Mô tả không thể nhiều hơn ${bioLimit} ký tự`);
     }
@@ -258,7 +256,7 @@ const EditProfile = () => {
                 name="username"
                 type="text"
                 value={profile_username}
-                disable={true}
+                disable={true }
                 placeholer="Tên tài khoản"
                 icon="fi-rr-at"
               />
@@ -281,6 +279,17 @@ const EditProfile = () => {
                     type="text"
                     value={faculty}
                     placeholer="Khoa"
+                    disable={true}
+                    icon="fi-rr-graduation-cap"
+                  />
+                </div>
+
+                <div className="">
+                  <InputBox
+                    name="dateOfBirth"
+                    type="date"
+                    value={getFullDay(dateOfBirth)}
+                    placeholer="Ngày sinh"
                     disable={true}
                     icon="fi-rr-graduation-cap"
                   />

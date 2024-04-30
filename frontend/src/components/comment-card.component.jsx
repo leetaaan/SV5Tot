@@ -196,7 +196,7 @@ const CommentCard = ({ index, leftVal, commentData }) => {
       <div className="my-5 p-6 rounded-md border border-grey">
         <div className="flex gap-3 items-center mb-8">
           <img src={profile_img} className="w-6 h-6 rounded-full" />
-          <p className="line-clamp-1">
+          <p className="line-clamp-1 capitalize">
             {fullname} @{commented_by_username}
           </p>
           <p className="min-w-fit">{getDay(commentedAt)}</p>

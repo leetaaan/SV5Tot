@@ -15,6 +15,7 @@ import ChangePassword from "./pages/change-password.page";
 import EditProfile from "./pages/edit-profile.page";
 import Admin from "./pages/admin/adminLayout";
 import InfomationTable from "./components/infomationTable/infimationTable";
+import Notifications from "./pages/notifications.page";
 import UsersTable from "./components/userTable/usersTable";
 export const UserContext = createContext({});
 
@@ -39,6 +40,9 @@ const App = () => {
         {/* <Route path="/" element={<HomePage />} /> */}
         <Route path="/" element={<Navbar />}>
           <Route index element={<HomeForumPage />} />
+          <Route path="dashboard" element={<SideNav />}>
+            <Route path="notifications" element={<Notifications />} />
+          </Route>
           <Route path="settings" element={<SideNav />}>
             <Route path="edit-profile" element={<EditProfile />} />
             <Route path="change-password" element={<ChangePassword />} />

@@ -4,7 +4,7 @@ import { UserContext } from "../App";
 
 const SideNav = () => {
   let {
-    userAuth: { access_token },
+    userAuth: { access_token, new_notification_available, role },
   } = useContext(UserContext);
 
   let page = location.pathname.split("/")[2];
@@ -30,9 +30,9 @@ const SideNav = () => {
   };
 
   useEffect(() => {
-    setShowSideNav(false)
-    pageStateTab.current.click()
-  }, [pageState])
+    setShowSideNav(false);
+    pageStateTab.current.click();
+  }, [pageState]);
 
   return access_token === null ? (
     <Navigate to="/signin" />
@@ -64,40 +64,54 @@ const SideNav = () => {
 
           <div
             className={
-              "min-w-[250px] h-[calc(100vg-80px-80px)] md:h-cover md:sticky top-24 overflow-y-auto p-6 md:pr-0 md:border-grey md:border-r absolute max-md:top-[64px] bg-white max-md:w-[calc(100%+80px)] max-md:px-16 max-md:-ml-7 duration-500 " +
-              (!showSideNav ? "max-md:opacity-0 max-md:pointer-events-none"
-              : "opacity-100 pointer-events-auto")
+              "min-w-[270px] h-[calc(100vg-80px-80px)] md:h-cover md:sticky top-24 overflow-y-auto p-6 md:pr-0 md:border-grey md:border-r absolute max-md:top-[64px] bg-white max-md:w-[calc(100%+80px)] max-md:px-16 max-md:-ml-7 duration-500 " +
+              (!showSideNav
+                ? "max-md:opacity-0 max-md:pointer-events-none"
+                : "opacity-100 pointer-events-auto")
             }
           >
-            <h1 className="text-xl text-dark-grey mb-3">Cài đặt</h1>
+            <h1 className="text-xl text-dark-grey mb-3">Quản lý</h1>
             <hr className="border-grey -ml-6 mb-8 mr-6" />
 
             <NavLink
-              to="/dashboard/blogs"
+              to="/dashboard/notifications"
               onClick={(e) => setPageState(e.target.innerText)}
               className="sidebar-link"
             >
-              <i className="fi fi-rr-document"></i>
-              Bài viết
-            </NavLink>
-
-            <NavLink
-              to="/dashboard/notification"
-              onClick={(e) => setPageState(e.target.innerText)}
-              className="sidebar-link"
-            >
-              <i className="fi fi-rr-bell"></i>
+              <div className="relative">
+                <i className="fi fi-rr-bell"></i>
+                {new_notification_available ? (
+                  <span className="bg-red w-2 h-2 rounded-full absolute top-0 right-0"></span>
+                ) : (
+                  ""
+                )}
+              </div>
               Thông báo
             </NavLink>
 
-            <NavLink
-              to="/editor"
-              onClick={(e) => setPageState(e.target.innerText)}
-              className="sidebar-link"
-            >
-              <i className="fi fi-rr-file-edit"></i>
-              Tạo bài viết
-            </NavLink>
+            {role === "Sinh viên" ? (
+              ""
+            ) : (
+              <>
+                <NavLink
+                  to="/dashboard/blogs"
+                  onClick={(e) => setPageState(e.target.innerText)}
+                  className="sidebar-link"
+                >
+                  <i className="fi fi-rr-document"></i>
+                  Bài viết
+                </NavLink>
+
+                <NavLink
+                  to="/editor"
+                  onClick={(e) => setPageState(e.target.innerText)}
+                  className="sidebar-link"
+                >
+                  <i className="fi fi-rr-file-edit"></i>
+                  Tạo bài viết
+                </NavLink>
+              </>
+            )}
 
             <h1 className="text-xl text-dark-grey mt-20 mb-3">
               Chỉnh sửa thông tin cá nhân

@@ -81,7 +81,7 @@ const UserAuthForm = ({ type }) => {
   }
   return(
     access_token ? <Navigate to="/" />
-   : 
+   :
     <AnimationWrapper keyValue={type}>
       <section className="h-cover flex items-center justify-center">
         <Toaster />

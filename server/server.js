@@ -56,6 +56,11 @@ const formatDatatoSend = (user) => {
     profile_img: user.personal_info.profile_img,
     username: user.personal_info.username,
     fullname: user.personal_info.fullname,
+    clas: user.personal_info.clas,
+    faculty: user.personal_info.faculty,
+    dateOfBirth: user.personal_info.dateOfBirth,
+    role: user.personal_info.role,
+    gender: user.personal_info.gender,
   };
 };
 
@@ -73,7 +78,8 @@ const generateUsername = async (email) => {
 
 //user
 server.post("/signup", (req, res) => {
-  let { fullname, email, password, clas, faculty, dateOfBirth } = req.body;
+  let { fullname, email, password, clas, faculty, dateOfBirth, gender, role } =
+    req.body;
 
   if (fullname.length < 5) {
     return res.status(403).json({ Lỗi: "Họ và tên phải nhiều hơn 5 ký tự" });
@@ -98,8 +104,10 @@ server.post("/signup", (req, res) => {
         password: hashed_password,
         username,
         clas,
+        gender,
         faculty,
         dateOfBirth,
+        role,
       },
     });
 
@@ -644,7 +652,7 @@ server.post("/isliked-by-user", verifyJWT, (req, res) => {
 server.post("/add-comment", verifyJWT, (req, res) => {
   let user_id = req.user;
 
-  let { _id, comment, blog_author, replying_to } = req.body;
+  let { _id, comment, blog_author, replying_to, notification_id } = req.body;
 
   if (!comment.length) {
     return res.status(403).json({ error: "Viết nội dung để bình luận" });
@@ -679,7 +687,7 @@ server.post("/add-comment", verifyJWT, (req, res) => {
     });
 
     let notificationObj = {
-      type: replying_to ? "Thích" : "Bình luận",
+      type: replying_to ? "reply" : "comment",
       blog: _id,
       notification_for: blog_author,
       user: user_id,
@@ -694,6 +702,13 @@ server.post("/add-comment", verifyJWT, (req, res) => {
         { $push: { children: commentFile._id } }
       ).then((replyingToCommentDoc) => {
         notificationObj.notification_for = replyingToCommentDoc.commented_by;
+
+        if (notification_id) {
+          Notification.findOneAndUpdate(
+            { _id: notification_id },
+            { reply: commentFile._id }
+          ).then((notification) => console.log("Đã cập nhật thông báo"));
+        }
       });
     }
 
@@ -754,9 +769,10 @@ const deleteComments = (_id) => {
       Notification.findOneAndDelete({ comment: _id }).then((notification) =>
         console.log("Thông báo về bình luận đã được xóa")
       );
-      Notification.findOneAndDelete({ reply: _id }).then((notification) =>
-        console.log("Thông báo về trả lời đã được xóa")
-      );
+      Notification.findOneAndUpdate(
+        { reply: _id },
+        { $unset: { reply: 1 } }
+      ).then((notification) => console.log("Thông báo về trả lời đã được xóa"));
 
       Blog.findOneAndUpdate(
         { _id: comment.blog_id },
@@ -837,8 +853,10 @@ server.get("/new-notification", verifyJWT, (req, res) => {
 });
 
 server.post("/notifications", verifyJWT, (req, res) => {
-  let user_id = req.id;
+  let user_id = req.user;
+
   let { page, filter, deletedDocCount } = req.body;
+
   let maxLimit = 10;
 
   let findQuery = { notification_for: user_id, user: { $ne: user_id } };
@@ -863,18 +881,22 @@ server.post("/notifications", verifyJWT, (req, res) => {
     .populate("replied_on_comment", "comment")
     .populate("reply", "comment")
     .sort({ createdAt: -1 })
-    .select("createdAt type seem reply")
-    .then(notifications => {
-      return res.status(200).json({ notifications })
-    })
-    .catch(err => {
-      return res.status(500).json({ error: err.message})
-    })
+    .select("createdAt type seen reply")
+    .then((notifications) => {
+      Notification.updateMany(findQuery, { seen: true })
+      .skip(skipDocs)
+      .limit(maxLimit)
+      .then(() => console.log('Thông báo đã được xem'))
 
-})
+      return res.status(200).json({ notifications });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
 
 server.post("/all-notifications-count", verifyJWT, (req, res) => {
-  let user_id = req.id;
+  let user_id = req.user;
   let { filter } = req.body;
 
   let findQuery = { notification_for: user_id, user: { $ne: user_id } };
@@ -884,13 +906,13 @@ server.post("/all-notifications-count", verifyJWT, (req, res) => {
   }
 
   Notification.countDocuments(findQuery)
-  .then(count => {
-    return res.status(200).json({ totalDocs: count })
-  })
-  .catch(err => {
-    return res.status(500).json({ error: err.message})
-  })
-})
+    .then((count) => {
+      return res.status(200).json({ totalDocs: count });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
 //sv 5 tot
 // server.post("/create-event", verifyJWT, (req, res) => {
 //   let authorId = req.user;
@@ -948,8 +970,7 @@ server.post("/all-notifications-count", verifyJWT, (req, res) => {
 //     });
 // });
 
-//student 
-
+//student
 
 server.listen(PORT, () => {
   console.log("listening on port" + PORT);
