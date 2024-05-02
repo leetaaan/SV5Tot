@@ -1,17 +1,17 @@
 # token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MmJiYTY2NmQ3ZDE3Mjg1MzUxYzU2MyIsImlhdCI6MTcxNDE2MDY2MH0.iqVedrNysTUThJ7XEcd-DBldbYSbTDi1UNeB7xQSr6Q
-POST http://localhost:3000/signup
-Content-Type: application/json
+# POST http://localhost:3000/signup
+# Content-Type: application/json
 
-{
-    "fullname": "Lê Tân",
-    "email": "2011436@dlu.edu.vn",
-    "password": "LeTan12345",
-    "clas": "CTK44A",
-    "faculty": "CNTT",
-    "dateOfBirth": "2002/02/20",
-    "role": "Sinh viên",
-    "gender": "Male"
-}
+# {
+#     "fullname": "Lê Tân",
+#     "email": "2011436@dlu.edu.vn",
+#     "password": "LeTan12345",
+#     "clas": "CTK44A",
+#     "faculty": "CNTT",
+#     "dateOfBirth": "2002/02/20",
+#     "role": "Sinh viên",
+#     "gender": "Male"
+# }
 
 # POST http://localhost:3000/change-password
 # Content-Type: application/json
@@ -87,3 +87,12 @@ Content-Type: application/json
 # GET  http://localhost:3000/new-notification
 # Content-Type: application/json
 # Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MmJiYTY2NmQ3ZDE3Mjg1MzUxYzU2MyIsImlhdCI6MTcxNDE2MDY2MH0.iqVedrNysTUThJ7XEcd-DBldbYSbTDi1UNeB7xQSr6Q
+
+POST http://localhost:3000/user-written-blogs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MmM3ZDNjZWQzY2M5YzA4MTczYjFiZiIsImlhdCI6MTcxNDQ2MDYzNX0.-7qyQum2rhA5hi_Zcrjj8FLOH66u-WF-KGHYnRXEK1U
+Content-Type: application/json
+
+{
+    "page": 1,
+    "draft": false
+}

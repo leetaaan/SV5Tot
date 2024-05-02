@@ -15,6 +15,7 @@ import ChangePassword from "./pages/change-password.page";
 import EditProfile from "./pages/edit-profile.page";
 import Admin from "./pages/admin/admin";
 import Notifications from "./pages/notifications.page";
+import ManageBlogs from "./pages/manage-blogs.page";
 
 export const UserContext = createContext({});
 
@@ -28,7 +29,7 @@ const App = () => {
       ? setUserAuth(JSON.parse(userInSession))
       : setUserAuth({ access_token: null });
   }, []);
-
+  
   return (
     <UserContext.Provider value={{ userAuth, setUserAuth }}>
       <Routes>
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/" element={<Navbar />}>
           <Route index element={<HomeForumPage />} />
           <Route path="dashboard" element={<SideNav />}>
+            <Route path="blogs" element={<ManageBlogs />} />
             <Route path="notifications" element={<Notifications />} />
           </Route>
           <Route path="settings" element={<SideNav />}>
@@ -53,7 +55,7 @@ const App = () => {
           <Route path="blog/:blog_id" element={<BlogPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
-        <Route path="/admin" element={<Admin/>}/>
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </UserContext.Provider>
   );
