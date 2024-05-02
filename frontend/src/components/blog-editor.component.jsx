@@ -110,7 +110,7 @@ const BlogEditor = () => {
           toast.dismiss(loadingToat)
           toast.success("Đã lưu")
           setTimeout(() => {
-            navigate("/")
+            navigate("/dashboard/blogs?tab-draft")
           }, 500)
         })
         .catch(({response}) => {

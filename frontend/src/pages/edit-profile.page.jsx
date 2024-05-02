@@ -37,6 +37,7 @@ const EditProfile = () => {
       faculty,
       dateOfBirth,
       bio,
+      gender,
     },
     social_links,
   } = profile;
@@ -132,6 +133,7 @@ const EditProfile = () => {
       faculty,
       dateOfBirth,
       bio,
+      gender,
       youtube,
       facebook,
       twitter,
@@ -156,6 +158,7 @@ const EditProfile = () => {
           faculty,
           dateOfBirth,
           bio,
+          gender,
           social_links: {
             youtube,
             facebook,
@@ -167,7 +170,7 @@ const EditProfile = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${access_token}`,
+            'Authorization': `Bearer ${access_token}`,
           },
         }
       )
@@ -256,7 +259,7 @@ const EditProfile = () => {
                 name="username"
                 type="text"
                 value={profile_username}
-                disable={true }
+                disable={true}
                 placeholer="Tên tài khoản"
                 icon="fi-rr-at"
               />
@@ -283,19 +286,30 @@ const EditProfile = () => {
                     icon="fi-rr-graduation-cap"
                   />
                 </div>
-
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 md:gap-5">
                 <div className="">
                   <InputBox
                     name="dateOfBirth"
-                    type="date"
+                    type="text"
                     value={getFullDay(dateOfBirth)}
                     placeholer="Ngày sinh"
                     disable={true}
                     icon="fi-rr-graduation-cap"
                   />
                 </div>
-              </div>
 
+                <div className="">
+                  <InputBox
+                    name="gender"
+                    type="text"
+                    value={gender}
+                    placeholer="Giới tính"
+                    disable={true}
+                    icon="fi-rr-venus-mars"
+                  />
+                </div>
+              </div>
               <textarea
                 name="bio"
                 maxLength={bioLimit}
