@@ -16,6 +16,7 @@ import EditProfile from "./pages/edit-profile.page";
 import Admin from "./pages/admin/adminLayout";
 import InfomationTable from "./components/infomationTable/infimationTable";
 import Notifications from "./pages/notifications.page";
+import ManageBlogs from "./pages/manage-blogs.page";
 import UsersTable from "./components/userTable/usersTable";
 import StudentTable from "./components/studentTable/studentTable";
 export const UserContext = createContext({});
@@ -30,7 +31,7 @@ const App = () => {
       ? setUserAuth(JSON.parse(userInSession))
       : setUserAuth({ access_token: null });
   }, []);
-
+  
   return (
     <UserContext.Provider value={{ userAuth, setUserAuth }}>
       <Routes>
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/" element={<Navbar />}>
           <Route index element={<HomeForumPage />} />
           <Route path="dashboard" element={<SideNav />}>
+            <Route path="blogs" element={<ManageBlogs />} />
             <Route path="notifications" element={<Notifications />} />
           </Route>
           <Route path="settings" element={<SideNav />}>
@@ -55,38 +57,7 @@ const App = () => {
           <Route path="blog/:blog_id" element={<BlogPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
-        //admin role
-        <Route path="/admin" element={<Admin />} />
-
-        <Route
-          path="/admin/profile"
-          element={
-            <Admin>
-              <ProfilePage />
-            </Admin>
-          }
-        />
-
-        <Route
-          path="/admin/users"
-          element={
-            <Admin>
-              <UsersTable />
-            </Admin>
-          }
-        />
-
-        <Route
-          path="/admin/students"
-          element={
-            <Admin>
-              <StudentTable />
-            </Admin>
-          }
-        />
-        <Route path="/admin/criterias" element={<Admin>
-          <UsersTable/>
-        </Admin>} />
+        <Route path="/admin" element={<Admin/>}/>
       </Routes>
     </UserContext.Provider>
   );

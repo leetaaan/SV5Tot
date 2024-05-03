@@ -33,7 +33,7 @@ const userSchema = mongoose.Schema(
     personal_info: {
       fullname: {
         type: String,
-        lowercase: true,
+        lowercase: false,
         required: true,
         minlength: [3, "fullname must be 3 letters long"],
       },
@@ -51,7 +51,7 @@ const userSchema = mongoose.Schema(
       },
       clas: {
         type: String,
-        lowercase: true,
+        lowercase: false,
       },
       gender: {
         type: String,
@@ -63,7 +63,7 @@ const userSchema = mongoose.Schema(
       },
       faculty: {
         type: String,
-        lowercase: true,
+        lowercase: false,
       },
       dateOfBirth: {
         type: Date,

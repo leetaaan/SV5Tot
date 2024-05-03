@@ -20,7 +20,7 @@ const PublishForm = () => {
     setBlog,
   } = useContext(EditorContext);
 
-  let { userAuth: { access_token }} = useContext(UserContext)
+  let { userAuth: { access_token, role, }} = useContext(UserContext)
 
   let  navigate = useNavigate()
 
@@ -88,7 +88,7 @@ const PublishForm = () => {
       toast.dismiss(loadingToat)
       toast.success("Đã đăng")
       setTimeout(() => {
-        navigate("/")
+        navigate("/dashboard/blogs")
       }, 500)
     })
     .catch(({response}) => {
@@ -153,7 +153,7 @@ const PublishForm = () => {
               onKeyDown={handleKeyDown}
             />
             {tags.map((tag, i) => {
-              return <Tag tag={tag} tagIndex={i} key={i} />;
+              return <Tag role={role} tag={tag} tagIndex={i} key={i} />;
             })}
           </div>
           <p className="mt-1 text-dark-grey mb-4 text-right">

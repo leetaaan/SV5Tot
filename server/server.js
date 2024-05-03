@@ -320,7 +320,7 @@ server.post("/update-profile-img", verifyJWT, (req, res) => {
 });
 
 server.post("/update-profile", verifyJWT, (req, res) => {
-  let { username, bio, clas, faculty, dateOfBirth, social_links } = req.body;
+  let { username, bio, clas, faculty, dateOfBirth, gender, social_links } = req.body;
   let bioLimit = 150;
   if (username.length < 3) {
     return res
@@ -361,6 +361,7 @@ server.post("/update-profile", verifyJWT, (req, res) => {
     "personal_info.clas": clas,
     "personal_info.faculty": faculty,
     "personal_info.dateOfBirth": dateOfBirth,
+    "personal_info.gender": gender,
     social_links,
   };
   User.findOneAndUpdate({ _id: req.user }, updateObj, {
@@ -908,6 +909,69 @@ server.post("/all-notifications-count", verifyJWT, (req, res) => {
   Notification.countDocuments(findQuery)
     .then((count) => {
       return res.status(200).json({ totalDocs: count });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+//manager blog
+server.post("/user-written-blogs", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { page, draft, query, deletedDocCount } = req.body;
+
+  let maxLimit = 5;
+  let skipDocs = (page - 1) * maxLimit;
+
+  if (deletedDocCount) {
+    skipDocs -= deletedDocCount;
+  }
+
+  Blog.find({ author: user_id, draft, title: new RegExp(query, "i") })
+    .skip(skipDocs)
+    .limit(maxLimit)
+    .sort({ publishedAt: -1 })
+    .select(" title banner publishedAt blog_id activity des draft -_id ")
+    .then((blogs) => {
+      return res.status(200).json({ blogs });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/user-written-blogs-count", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { draft, query } = req.body;
+
+  Blog.countDocuments({ author: user_id, draft, title: new RegExp(query, "i") })
+    .then((count) => {
+      return res.status(200).json({ totalDocs: count });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/delete-blog", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { blog_id } = req.body;
+
+  Blog.findOneAndDelete({ blog_id })
+    .then(blog => {
+      Notification.deleteMany({ blog: blog._id })
+      .then(data => console.log("Đã xóa thông báo"))
+
+      Comment.deleteMany({ blog: blog._id })
+      .then(data => console.log("Đã xóa bình luận"))
+
+      User.findOneAndUpdate({ _id: user_id }, { $pull: { blog: blog._id }, $inc: { "account_info.total_posts": blog.draft ? 0 : -1 }})
+      .then(user => console.log("Đã xóa bài viết"))
+
+      return res.status(200).json({ status: "Xong" });
     })
     .catch((err) => {
       return res.status(500).json({ error: err.message });
