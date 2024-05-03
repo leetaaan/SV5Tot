@@ -11,6 +11,8 @@ import {
 
 import { Link } from "react-router-dom";
 import images from "../../assets/img";
+import { Children } from "react";
+import { icons } from "antd/es/image/PreviewGroup";
 
 const Sidebar = () => {
   const items = [
@@ -21,14 +23,14 @@ const Sidebar = () => {
     },
     {
       key: "users",
-      icon: <UserOutlined />,
-      label: (<Link to='/admin/students' className="" title="">Người dùng</Link>),
-      
+      icon: <OrderedListOutlined />,
+      label: (<Link to='/admin/users' className="" title="">Người dùng</Link>),
     },
     {
       key: "students",
-      icon: <OrderedListOutlined />,
-      label: (<Link to='/admin/users' className="" title="">Thông tin sinh viên</Link>),
+      icon: <UserOutlined />,
+      label: (<Link to='/admin/students' className="" title="">Thông tin sinh viên</Link>),
+      
     },
     {
       key: "criteria",

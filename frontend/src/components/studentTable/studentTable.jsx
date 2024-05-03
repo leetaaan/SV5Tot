@@ -1,28 +1,46 @@
-// UserTable.js
-import { Table, Button, Space, Input } from "antd";
+import { Table, Button, Space, Input, Pagination } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import UserModal from "../modals/userModal";
 import WarningModal from "../modals/warningModal";
-import CriteriaColumns from "../../assets/columns/criteriaColumn";
-import CriteriaModal from "../modals/criteriaModal";
-import exampleCriteria from "../../assets/json/exampleCriteria";
-const UsersTable = () => {
-  const [dataSource, setDataSource] = useState([]); //data
-  const [isModalVisible, setIsModalVisible] = useState(false); //model
-  const [selectedRecord, setSelectedRecord] = useState(null); //
+import InfoColumns from "../../assets/columns/infoColumn";
+import exampleData from "../../assets/json/exampleData";
+
+const StudentTable = () => {
+  const [dataSource, setDataSource] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [deleteRecord, setDeleteRecord] = useState(null);
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, pageSize]);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `YOUR_API_ENDPOINT?page=${currentPage}&pageSize=${pageSize}`
+      );
+      const data = await response.json();
+      setDataSource(data.results);
+      setTotalItems(data.totalItems);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleAdd = () => {
     setIsModalVisible(true);
   };
 
   const handleEdit = (record) => {
-    setSelectedRecord(record);
     setIsModalVisible(true);
+    setSelectedRecord(record);
   };
 
   const handleDelete = (record) => {
@@ -49,10 +67,12 @@ const UsersTable = () => {
 
     setDataSource(newData);
     setIsModalVisible(false);
+    setSelectedRecord(null);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    setSelectedRecord(null);
   };
 
   const handleSearch = (e) => {
@@ -60,29 +80,18 @@ const UsersTable = () => {
     setSearchText(value);
   };
 
-  const filteredDataSource = dataSource.filter(
-    (item) =>
-      item.daoduc &&
-      item.ten.toLowerCase().includes(searchText.toLowerCase()) &&
-      item.theluc &&
-      item.unit.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const handlePageChange = (page, pageSize) => {
+    setCurrentPage(page);
+  };
 
-  // handler pagination
-  // const totalItem = filteredDataSource.length
-
-  // const handlePageChange = (page, pageSize) => {
-  //   setCurrentPage(page);
-  // };
-
-  // const paginatedDataSource = filteredDataSource.slice(
-  //   (currentPage - 1) * pageSize,
-  //   currentPage * pageSize
-  // );
+  const handleShowSizeChange = (current, size) => {
+    setPageSize(size);
+    setCurrentPage(1); // Reset to first page when changing page size
+  };
 
   return (
-    <div className="usersTable">
-      <div className="usersTable__search" style={{ marginBottom: 16 }}>
+    <div className="studentTable">
+      <div className="studentTable__search" style={{ marginBottom: 16 }}>
         <Input
           placeholder="Tìm kiếm..."
           prefix={<SearchOutlined />}
@@ -95,26 +104,30 @@ const UsersTable = () => {
         </Button>
       </div>
       <Table
-        dataSource={exampleCriteria }
-        columns={CriteriaColumns({
+        dataSource={exampleData}
+        columns={InfoColumns({
           handleEdit,
           handleDelete,
           handleViewPersonalInfo,
         })}
-        // pagination={{
-        //   current: currentPage,
-        //   pageSize: pageSize,
-        //   total: totalItem,
-        //   onChange: handlePageChange,
-        // }
-        // }
+        pagination={false}
       />
-      <CriteriaModal
+      <Pagination
+        current={currentPage}
+        pageSize={pageSize}
+        total={totalItems}
+        onChange={handlePageChange}
+        showSizeChanger
+        onShowSizeChange={handleShowSizeChange}
+        showQuickJumper
+        className="studentTable__pagination"
+      />
+      <UserModal
         visible={isModalVisible}
         onCreate={handleOk}
         onCancel={handleCancel}
         selectedRecord={selectedRecord}
-        columns={CriteriaColumns({
+        columns={InfoColumns({
           handleEdit,
           handleDelete,
           handleViewPersonalInfo,
@@ -130,4 +143,4 @@ const UsersTable = () => {
   );
 };
 
-export default UsersTable;
+export default StudentTable;

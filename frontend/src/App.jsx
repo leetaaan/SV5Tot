@@ -17,6 +17,7 @@ import Admin from "./pages/admin/adminLayout";
 import InfomationTable from "./components/infomationTable/infimationTable";
 import Notifications from "./pages/notifications.page";
 import UsersTable from "./components/userTable/usersTable";
+import StudentTable from "./components/studentTable/studentTable";
 export const UserContext = createContext({});
 
 const App = () => {
@@ -54,7 +55,9 @@ const App = () => {
           <Route path="blog/:blog_id" element={<BlogPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
+        //admin role
         <Route path="/admin" element={<Admin />} />
+
         <Route
           path="/admin/profile"
           element={
@@ -63,6 +66,7 @@ const App = () => {
             </Admin>
           }
         />
+
         <Route
           path="/admin/users"
           element={
@@ -71,30 +75,18 @@ const App = () => {
             </Admin>
           }
         />
+
         <Route
           path="/admin/students"
           element={
             <Admin>
-              <InfomationTable />
+              <StudentTable />
             </Admin>
           }
         />
-        <Route
-          path="/admin/students"
-          element={
-            <Admin>
-              <InfomationTable />
-            </Admin>
-          }
-        />
-        <Route
-          path="/admin/criterias"
-          element={
-            <Admin>
-              
-            </Admin>
-          }
-        />
+        <Route path="/admin/criterias" element={<Admin>
+          <UsersTable/>
+        </Admin>} />
       </Routes>
     </UserContext.Provider>
   );

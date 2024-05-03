@@ -1,10 +1,11 @@
 // Home.js
-import { Button, Layout } from "antd";
+import { Button, Layout, Pagination } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { useState,useEffect, Children } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import Navbar from "../../components/navbar/navbar";
 import Profile from "../../components/profile/profile";
+import { Footer } from "antd/es/layout/layout";
 
 const { Sider, Header, Content } = Layout;
 
@@ -48,7 +49,9 @@ const Admin = ({children}) => {
         <Header className="home__header">
           <Navbar />
         </Header>
-        <Content className="home__content">{children}</Content>
+        <Content className="home__content">
+          {children}
+        </Content>
       </Layout>
     </Layout>
   );
