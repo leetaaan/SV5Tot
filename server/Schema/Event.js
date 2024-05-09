@@ -13,16 +13,16 @@ const eventSchema = mongoose.Schema({
     },
     banner: {
         type: String,
-        // required: true,
+        required: true,
     },
     des: {
         type: String,
         maxlength: 200,
-        // required: true
+        required: true
     },
     content: {
         type: [],
-        // required: true
+        required: true
     },
     author: {
         type: Schema.Types.ObjectId,

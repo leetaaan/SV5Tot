@@ -24,7 +24,7 @@ const HomeForumPage = () => {
     "hội nhập tốt",
     "ctk44",
     "cntt",
-    "dlu",
+    "khoa toán – tin học",
     "tag test",
   ];
 
@@ -114,7 +114,7 @@ const HomeForumPage = () => {
             defaultHidden={["bài viết xu hướng"]}
           >
             <>
-              {blogs === null ? (
+              {blogs == null ? (
                 <Loader />
               ) : blogs.results.length ? (
                 blogs.results.map((blog, i) => {

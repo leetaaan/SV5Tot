@@ -436,12 +436,14 @@ server.post("/all-latest-blogs-count", (req, res) => {
 });
 
 server.post("/search-blogs", (req, res) => {
-  let { tag, query, author, page, limit, eliminate_blog } = req.body;
+  let { tag, query, author, page, limit, eliminate_blog, categories } = req.body;
   let findQuery;
 
   if (tag) {
     findQuery = { tags: tag, draft: false, blog_id: { $ne: eliminate_blog } };
-  } else if (query) {
+  } else if (categories) {
+    findQuery = { draft: false, categories: categories };
+  }else if (query) {
     findQuery = { draft: false, title: new RegExp(query, "i") };
   } else if (author) {
     findQuery = { author, draft: false };
@@ -454,7 +456,7 @@ server.post("/search-blogs", (req, res) => {
       "personal_info.fullname personal_info.username personal_info.profile_img -_id"
     )
     .sort({ publishedAt: -1 })
-    .select("blog_id title des banner activity tags publishedAt -_id")
+    .select("blog_id title des banner activity tags categories publishedAt -_id")
     .skip((page - 1) * maxLimit)
     .limit(maxLimit)
     .then((blogs) => {
@@ -466,12 +468,14 @@ server.post("/search-blogs", (req, res) => {
 });
 
 server.post("/search-blogs-count", (req, res) => {
-  let { tag, author, query } = req.body;
+  let { tag, categories, author, query } = req.body;
 
   let findQuery;
   if (tag) {
     findQuery = { tags: tag, draft: false };
-  } else if (query) {
+  } else if (categories) {
+    findQuery = { categories: categories, draft: false };
+  }else if (query) {
     findQuery = { draft: false, title: new RegExp(query, "i") };
   } else if (author) {
     findQuery = { author, draft: false };
@@ -487,7 +491,7 @@ server.post("/search-blogs-count", (req, res) => {
 
 server.post("/create-blog", verifyJWT, (req, res) => {
   let authorId = req.user;
-  let { title, des, banner, tags, content, draft, id } = req.body;
+  let { title, des, banner, tags, content, draft, id, categories } = req.body;
   if (!title.length) {
     return res.status(403).json({ error: "Bạn phải cung cấp tiêu đề để đăng" });
   }
@@ -496,6 +500,11 @@ server.post("/create-blog", verifyJWT, (req, res) => {
       return res
         .status(403)
         .json({ error: "Bạn phải cung cấp mô tả dưới 200 ký tự để đăng" });
+    }
+    if (!categories.length) {
+      return res
+        .status(403)
+        .json({ error: "Bạn phải cung cấp thư viện để đăng" });
     }
     if (!banner.length) {
       return res
@@ -524,7 +533,7 @@ server.post("/create-blog", verifyJWT, (req, res) => {
   if (id) {
     Blog.findOneAndUpdate(
       { blog_id },
-      { title, des, banner, content, tags, draft: draft ? draft : false }
+      { title, des, banner, content, categories, tags, draft: draft ? draft : false }
     )
       .then(() => {
         return res.status(200).json({ id: blog_id });
@@ -540,6 +549,7 @@ server.post("/create-blog", verifyJWT, (req, res) => {
       content,
       tags,
       author: authorId,
+      categories,
       blog_id,
       draft: Boolean(draft),
     });
@@ -583,7 +593,7 @@ server.post("/get-blog", (req, res) => {
       "author",
       "personal_info.fullname personal_info.username personal_info.profile_img"
     )
-    .select("title des banner content activity tags publishedAt blog_id ")
+    .select("title des banner content activity tags categories publishedAt blog_id ")
     .then((blog) => {
       User.findOneAndUpdate(
         { "personal_info.username": blog.author.personal_info.username },

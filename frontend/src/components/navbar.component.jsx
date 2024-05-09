@@ -21,7 +21,7 @@ const Navbar = () => {
       axios
         .get(import.meta.env.VITE_SERVER_DOMAIN + "/new-notification", {
           headers: {
-            Authorization: `Bearer ${access_token}`,
+            'Authorization': `Bearer ${access_token}`,
           },
         })
         .then(({ data }) => {
@@ -43,7 +43,7 @@ const Navbar = () => {
   };
   const handleSearch = (e) => {
     let query = e.target.value;
-    if (e.keyCode === 13 && query.length) {
+    if (e.keyCode == 13 && query.length) {
       navigate(`/search/${query}`);
     }
   };
@@ -88,7 +88,7 @@ const Navbar = () => {
           {role === "Sinh viên" ? null : (
             <Link to="/editor" className="hidden lg:flex gap-2 link">
               <i className="fi fi-rr-file-edit"></i>
-              <p>Tạo bài viết"</p>
+              <p>Tạo bài viết</p>
             </Link>
           )}
             <Link to="/dashboard/notifications">

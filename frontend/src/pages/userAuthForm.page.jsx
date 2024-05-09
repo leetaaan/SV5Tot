@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext } from "react";
 import InputBox from "../components/input.component";
 import googleIcon from "../imgs/google.png";
 import { Link, Navigate } from "react-router-dom";
@@ -15,13 +15,11 @@ const UserAuthForm = ({ type }) => {
     setUserAuth,
   } = useContext(UserContext);
 
-  console.log(access_token);
   const userAuthThroughServer = (serverRoute, formData) => {
     axios
       .post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
       .then(({ data }) => {
         storeInSession("user", JSON.stringify(data));
-
         setUserAuth(data);
       })
       .catch(({ response }) => {
@@ -61,7 +59,7 @@ const UserAuthForm = ({ type }) => {
         "Mật khẩu phải từ 6 đến 20 ký tự bao gồm số, 1 ký tự thường, 1 ký tự hoa"
       );
     }
-
+    
     userAuthThroughServer(serverRoute, formData);
   };
 

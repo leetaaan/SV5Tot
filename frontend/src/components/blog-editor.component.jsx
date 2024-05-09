@@ -12,7 +12,7 @@ import { UserContext } from "../App";
 import { uploadToCloudinary } from "../common/cloundinary";
 
 const BlogEditor = () => {
-  let { blog, blog: { title, banner, content, tags, des }, setBlog, textEditor, setTextEditor,
+  let { blog, blog: { title, banner, content, tags, categories, des }, setBlog, textEditor, setTextEditor,
   setEditorState } = useContext(EditorContext)
 
   let { userAuth: { access_token }} = useContext(UserContext)
@@ -97,7 +97,7 @@ const BlogEditor = () => {
     if(textEditor.isReady){
       textEditor.save().then(content => {
         let blogObj = {
-          title, banner, des, content, tags, draft: true
+          title, banner, des, content, tags, draft: true, categories
         }
 
         axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/create-blog', {...blogObj, id: blog_id}, {
