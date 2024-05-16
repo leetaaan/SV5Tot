@@ -39,14 +39,14 @@ const UserColumns = ({ handleEdit, handleDelete, handleViewPersonalInfo }) => {
       key: "class",
     },
     {
-      title: "Giới tính",
-      dataIndex: "gender",
-      key: "gender",
-    },
-    {
       title: "Khoa",
       dataIndex: "faculty",
       key: "faculty",
+    },
+    {
+      title: "Giới tính",
+      dataIndex: "gender",
+      key: "gender",
     },
     {
       title: "Ngày sinh",
