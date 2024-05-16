@@ -1,41 +1,36 @@
 import { Flex, Menu } from "antd";
-import { FaLeaf } from "react-icons/fa";
 import {
-  UserOutlined,
-  ProfileOutlined,
-  LogoutOutlined,
   OrderedListOutlined,
   CarryOutOutlined,
-  SettingOutlined,
+  ProductOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 
 import { Link } from "react-router-dom";
 import images from "../../assets/img";
-import { Children } from "react";
-import { icons } from "antd/es/image/PreviewGroup";
+
 
 const Sidebar = () => {
   const items = [
     {
       key: "dashboard",
-      icon: <CarryOutOutlined />,
+      icon: <ProductOutlined />,
       label: (<Link to='/admin/profile' className="" title="">Danh mục</Link>),
     },
     {
       key: "users",
-      icon: <OrderedListOutlined />,
-      label: (<Link to='/admin/users' className="" title="">Người dùng</Link>),
-    },
-    {
-      key: "students",
       icon: <UserOutlined />,
-      label: (<Link to='/admin/students' className="" title="">Thông tin sinh viên</Link>),
-      
+      label: (<Link to='/admin/users' className="" title="">Người dùng</Link>),
     },
     {
       key: "criteria",
       icon: <OrderedListOutlined />,
       label: (<Link to='/admin/criterias' className="" title="">Xét duyệt tiêu chí</Link>),
+    },
+    {
+      key: "posts",
+      icon: <CarryOutOutlined />,
+      label: (<Link to='/admin/posts' className="" title="">Bài viết</Link>),
     },
   ];
 

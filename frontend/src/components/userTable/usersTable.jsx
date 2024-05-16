@@ -1,20 +1,22 @@
 // UserTable.js
-import { Table, Button, Space, Input } from "antd";
+import { Table, Button, Space, Input, Pagination } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 import React, { useState } from "react";
 import WarningModal from "../modals/warningModal";
-import CriteriaColumns from "../../assets/columns/criteriaColumn";
 import CriteriaModal from "../modals/criteriaModal";
 import exampleCriteria from "../../assets/json/exampleCriteria";
+import UserColumns from "../../assets/columns/userColumn";
+
 const UsersTable = () => {
   const [dataSource, setDataSource] = useState([]); //data
   const [isModalVisible, setIsModalVisible] = useState(false); //model
   const [selectedRecord, setSelectedRecord] = useState(null); //
   const [searchText, setSearchText] = useState("");
   const [deleteRecord, setDeleteRecord] = useState(null);
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
 
   const handleAdd = () => {
     setIsModalVisible(true);
@@ -68,17 +70,14 @@ const UsersTable = () => {
       item.unit.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  // handler pagination
-  // const totalItem = filteredDataSource.length
+  const handlePageChange = (page, pageSize) => {
+    setCurrentPage(page);
+  };
 
-  // const handlePageChange = (page, pageSize) => {
-  //   setCurrentPage(page);
-  // };
-
-  // const paginatedDataSource = filteredDataSource.slice(
-  //   (currentPage - 1) * pageSize,
-  //   currentPage * pageSize
-  // );
+  const handleShowSizeChange = (current, size) => {
+    setPageSize(size);
+    setCurrentPage(1); // Reset to first page when changing page size
+  };
 
   return (
     <div className="usersTable">
@@ -95,26 +94,31 @@ const UsersTable = () => {
         </Button>
       </div>
       <Table
-        dataSource={exampleCriteria }
-        columns={CriteriaColumns({
+        dataSource={exampleCriteria}
+        columns={UserColumns({
           handleEdit,
           handleDelete,
           handleViewPersonalInfo,
         })}
-        // pagination={{
-        //   current: currentPage,
-        //   pageSize: pageSize,
-        //   total: totalItem,
-        //   onChange: handlePageChange,
-        // }
-        // }
+        pagination={false}
+        scroll={{ x: "calc(700px + 80%" }}
+      />
+      <Pagination
+        current={currentPage}
+        pageSize={pageSize}
+        total={totalItems}
+        onChange={handlePageChange}
+        showSizeChanger
+        onShowSizeChange={handleShowSizeChange}
+        showQuickJumper
+        className="infomationTable__pagination"
       />
       <CriteriaModal
         visible={isModalVisible}
         onCreate={handleOk}
         onCancel={handleCancel}
         selectedRecord={selectedRecord}
-        columns={CriteriaColumns({
+        columns={UserColumns({
           handleEdit,
           handleDelete,
           handleViewPersonalInfo,

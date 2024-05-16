@@ -58,6 +58,51 @@ const App = () => {
           <Route path="*" element={<PageNotFound />} />
         </Route>
         <Route path="/admin" element={<Admin/>}/>
+
+        <Route
+          path="/admin/profile"
+          element={
+            <Admin>
+
+            </Admin>
+          }
+        />
+
+        <Route
+          path="/admin/users"
+          element={
+            <Admin>
+              <UsersTable />
+            </Admin>
+          }
+        />
+
+        <Route
+          path="/admin/students"
+          element={
+            <Admin>
+              <InfomationTable />
+            </Admin>
+          }
+        />
+
+        <Route
+          path="/admin/criterias"
+          element={
+            <Admin>
+              <InfomationTable />
+            </Admin>
+          }
+        />
+
+<Route
+          path="/admin/posts"
+          element={
+            <Admin>
+              <InfomationTable />
+            </Admin>
+          }
+        />
       </Routes>
     </UserContext.Provider>
   );
