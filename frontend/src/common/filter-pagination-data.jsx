@@ -14,7 +14,7 @@ export const filterPaginationData = async ({
 
   if (user) {
     headers.headers = {
-      Authorization: `Bearer ${user}`,
+      'Authorization': `Bearer ${user}`,
     };
   }
 

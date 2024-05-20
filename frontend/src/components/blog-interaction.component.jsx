@@ -13,7 +13,7 @@ const BlogInteraction = () => {
       title,
       blog_id,
       activity,
-      activity: { total_likes, total_comments },
+      activity: { total_likes, total_comments, total_reports },
       author: {
         personal_info: { username: author_username },
       },
@@ -21,6 +21,8 @@ const BlogInteraction = () => {
     setBlog,
     islikedByUser,
     setLikedByUser,
+    isreportedByUser,
+    setReportedByUser,
     setCommentsWrapper,
   } = useContext(BlogContext);
 
@@ -36,12 +38,29 @@ const BlogInteraction = () => {
           { _id },
           {
             headers: {
-              Authorization: `Bearer ${access_token}`,
+              'Authorization': `Bearer ${access_token}`,
             },
           }
         )
         .then(({ data: { result } }) => {
           setLikedByUser(Boolean(result));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+        axios
+        .post(
+          import.meta.env.VITE_SERVER_DOMAIN + "/isreported-by-user",
+          { _id },
+          {
+            headers: {
+              'Authorization': `Bearer ${access_token}`,
+            },
+          }
+        )
+        .then(({ data: { result } }) => {
+          setReportedByUser(Boolean(result));
         })
         .catch((err) => {
           console.log(err);
@@ -62,7 +81,7 @@ const BlogInteraction = () => {
           { _id, islikedByUser },
           {
             headers: {
-              Authorization: `Bearer ${access_token}`,
+              'Authorization': `Bearer ${access_token}`,
             },
           }
         )
@@ -72,7 +91,35 @@ const BlogInteraction = () => {
           console.log(err);
         });
     } else {
-      toast.error("chua login");
+      toast.error("Chưa đăng nhập");
+    }
+  };
+
+  const handleReport = () => {
+    if (access_token) {
+      setReportedByUser((preVal) => !preVal);
+
+      !isreportedByUser ? total_reports++ : total_reports--;
+      setBlog({ ...blog, activity: { ...activity, total_reports } });
+
+      axios
+        .post(
+          import.meta.env.VITE_SERVER_DOMAIN + "/report-blog",
+          { _id, isreportedByUser },
+          {
+            headers: {
+              'Authorization': `Bearer ${access_token}`,
+            },
+          }
+        )
+        .then(({ data }) => {
+          toast.success("Báo cáo bài viết vi phạm tiêu chuẩn cộng đồng thành công")
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      toast.error("Chưa đăng nhập");
     }
   };
 
@@ -114,13 +161,13 @@ const BlogInteraction = () => {
               Chỉnh sửa
             </Link>
           ) : (
-            ""
+            <>
+          <button onClick={handleReport}>
+            <i className="underline hover:text-red">Báo cáo</i>
+          </button>
+          <Link to={`/community-standards`}><i className="fi fi-rr-info hover:text-dark-grey"></i></Link>
+            </>
           )}
-          <Link
-            to={`https://www.instagram.com/naat.eel/instagram?text=Read ${title}&url=${location.href}`}
-          >
-            <i className="fi fi-rr-share-square text-xl hover:text-twitter"></i>
-          </Link>
         </div>
       </div>
 

@@ -47,9 +47,6 @@ const PublishEvent = () => {
     if(!title.length){
       return toast.error("Nhập tiêu đề trước khi đăng")
     }
-    if(!des.length || des.length > characterLimit){
-      return toast.error(`Nhập mô tả trước khi đăng với ${characterLimit} ký tự`)
-    }
 
     let loadingToat = toast.loading("Đang đăng....")
     e.target.classList.add('disable')
@@ -107,19 +104,6 @@ const PublishEvent = () => {
             className="input-box pl-4"
             onChange={handleBlogTitleChange}
           />
-
-          <p className="text-dark-grey mb-2 mt-9">Mô tả ngắn</p>
-          <textarea
-            maxLength={characterLimit}
-            defaultValue={des}
-            className="h-40 resize-none leading-7 input-box pl-4"
-            onChange={handleBlogDesChange}
-            onKeyDown={handleTitleKeyDown}
-          ></textarea>
-
-          <p className="mt-1 text-dark-grey text-sm text-right">
-            {characterLimit - (des ? des.length : 0)} Ký tự còn lại
-          </p>
           <button className="btn-dark px-8" onClick={publishBlog}>Gửi</button>
         </div>
       </section>

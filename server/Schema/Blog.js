@@ -13,20 +13,24 @@ const blogSchema = mongoose.Schema(
     },
     banner: {
       type: String,
-      // required: true,
+      required: true,
     },
     des: {
       type: String,
       maxlength: 200,
-      // required: true
+      required: true
     },
     content: {
       type: [],
-      // required: true
+      required: true
     },
     tags: {
       type: [String],
-      // required: true
+      required: true
+    },
+    categories: {
+      type: String,
+      required: true
     },
     author: {
       type: Schema.Types.ObjectId,
@@ -35,6 +39,10 @@ const blogSchema = mongoose.Schema(
     },
     activity: {
       total_likes: {
+        type: Number,
+        default: 0,
+      },
+      total_reports: {
         type: Number,
         default: 0,
       },

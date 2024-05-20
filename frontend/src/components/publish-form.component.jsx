@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import AnimationWrapper from "../common/page-animation";
 import { Toaster, toast } from "react-hot-toast";
 import { EditorContext } from "../pages/editor.pages";
@@ -6,21 +6,22 @@ import Tag from "./tags.component";
 import axios from "axios";
 import { UserContext } from "../App";
 import { useNavigate, useParams } from "react-router-dom";
+import Categories from "./categories.component";
 
 const PublishForm = () => {
   let characterLimit = 200;
   let tagLimit = 5;
-
+  const [selected, setSelected] = useState("");
   let { blog_id } = useParams()
 
   let {
     blog,
-    blog: { banner, title, tags, des, content },
+    blog: { banner, title, tags, des, content, categories },
     setEditorState,
     setBlog,
   } = useContext(EditorContext);
 
-  let { userAuth: { access_token, role, }} = useContext(UserContext)
+  let { userAuth: { access_token, role }} = useContext(UserContext)
 
   let  navigate = useNavigate()
 
@@ -76,7 +77,7 @@ const PublishForm = () => {
     let loadingToat = toast.loading("Đang đăng....")
     e.target.classList.add('disable')
     let blogObj = {
-      title, banner, des, content, tags, draft: false
+      title, banner, des, content, tags, draft: false, categories: selected
     }
     axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/create-blog', {...blogObj, id: blog_id}, {
       headers: {
@@ -143,22 +144,29 @@ const PublishForm = () => {
             {characterLimit - (des ? des.length : 0)} Ký tự còn lại
           </p>
 
-          <p className="text-dark-grey mb-2 mt-9">Chủ đề</p>
+          <p className="text-dark-grey mb-2 mt-9">Thẻ</p>
 
           <div className="relative input-box pl-2 py-2 pb-4">
             <input
               type="text"
-              placeholder="Chủ đề"
+              placeholder="Thẻ"
               className="sticky input-box bg-white top-0 left-0 pl-4 mb-3 focus:bg-white"
               onKeyDown={handleKeyDown}
             />
             {tags.map((tag, i) => {
-              return <Tag role={role} tag={tag} tagIndex={i} key={i} />;
+              return <Tag tag={tag} tagIndex={i} key={i} />;
             })}
           </div>
+
+
           <p className="mt-1 text-dark-grey mb-4 text-right">
             {tagLimit - (tags ? tags.length : 0)} Thư viện còn lại
           </p>
+
+          <div className="sticky input-box top-0 left-0 pl-4 mb-3">
+               <Categories selected={selected} setSelected={setSelected} />
+          </div>
+          
           <button className="btn-dark px-8" onClick={publishBlog}>Đăng</button>
         </div>
       </section>

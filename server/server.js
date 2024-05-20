@@ -8,11 +8,12 @@ import cors from "cors";
 import admin from "firebase-admin";
 import serviceAccountKey from "./sinh-vien-5tot-firebase-adminsdk-355hd-ac4e4aa098.json" assert { type: "json" };
 import { getAuth } from "firebase-admin/auth";
-
+import nodemailer from "nodemailer"
 import User from "./Schema/User.js";
 import Blog from "./Schema/Blog.js";
 import Notification from "./Schema/Notification.js";
 import Comment from "./Schema/Comment.js";
+import Event from "./Schema/Event.js";
 
 const server = express();
 let PORT = 3000;
@@ -380,6 +381,62 @@ server.post("/update-profile", verifyJWT, (req, res) => {
     });
 });
 
+server.post("/forgot-password" , async (req, res) => {
+  let { email } = req.body
+    User.findOne({"personal_info.email": email })
+  .then((user) => {
+    if (!user) {
+      return res.status(404).json({ error: "Tài khoản không tồn tại" });
+    }
+    
+    const token = jwt.sign({id: user._id}, process.env.SECRET_ACCESS_KEY, {expiresIn: '5m'})
+  
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'letan085@gmail.com',
+        pass: 'dbxf gjih uyyh kccz'
+      }
+    });
+    
+    const encodedToken = encodeURIComponent(token).replace(/\./g, "")
+    var mailOptions = {
+      from: 'letan085@gmail.com',
+      to: email,
+      subject: 'Đặt lại mật khẩu',
+      text: `http://localhost:5173/reset-password/${encodedToken}`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+  })
+  .catch((err) => {
+    return res.status(500).json({ error: err.message });
+  });
+})
+
+server.post("/reset-password:token", async (req, res) => {
+  const { token } = req.params.token;
+  const { password } = req.body
+
+  try {
+    const decoded = await jwt.verify(token, process.env.SECRET_ACCESS_KEY)
+    const id = decoded.id
+    const hashPassword = await bcrypt.hash(password, 10)
+    await User.findOneAndUpdate({_id: id}, { "personal_info.password": hashPassword })
+    return res.status(200).json({ status: "Đã đổi mật khẩu" });
+  } catch(err) {
+    return res.status(500).json({
+      error:
+        "Đã có lỗi xảy ra khi lưu mật khẩu mới, vui lòng thử lại",
+    });
+  }
+});
 // blog
 server.post("/latest-blogs", (req, res) => {
   let { page } = req.body;
@@ -441,9 +498,21 @@ server.post("/search-blogs", (req, res) => {
 
   if (tag) {
     findQuery = { tags: tag, draft: false, blog_id: { $ne: eliminate_blog } };
-  } else if (query) {
-    findQuery = { draft: false, title: new RegExp(query, "i") };
-  } else if (author) {
+  }
+  if (query) {
+    if (findQuery) {
+      findQuery = {
+        $or: [
+          { categories: new RegExp(query, "i") },
+          findQuery,
+        ],
+        draft: false,
+      };
+    } else {
+      findQuery = { categories: new RegExp(query, "i"), draft: false };
+    }
+  }
+  if (author) {
     findQuery = { author, draft: false };
   }
 
@@ -454,7 +523,7 @@ server.post("/search-blogs", (req, res) => {
       "personal_info.fullname personal_info.username personal_info.profile_img -_id"
     )
     .sort({ publishedAt: -1 })
-    .select("blog_id title des banner activity tags publishedAt -_id")
+    .select("blog_id title des banner activity tags categories publishedAt -_id")
     .skip((page - 1) * maxLimit)
     .limit(maxLimit)
     .then((blogs) => {
@@ -471,9 +540,21 @@ server.post("/search-blogs-count", (req, res) => {
   let findQuery;
   if (tag) {
     findQuery = { tags: tag, draft: false };
-  } else if (query) {
-    findQuery = { draft: false, title: new RegExp(query, "i") };
-  } else if (author) {
+  } 
+  if (query) {
+    if (findQuery) {
+      findQuery = {
+        $or: [
+          { categories: new RegExp(query, "i") },
+          findQuery,
+        ],
+        draft: false,
+      };
+    } else {
+      findQuery = { categories: new RegExp(query, "i"), draft: false };
+    }
+  }
+  if (author) {
     findQuery = { author, draft: false };
   }
   Blog.countDocuments(findQuery)
@@ -487,7 +568,7 @@ server.post("/search-blogs-count", (req, res) => {
 
 server.post("/create-blog", verifyJWT, (req, res) => {
   let authorId = req.user;
-  let { title, des, banner, tags, content, draft, id } = req.body;
+  let { title, des, banner, tags, content, draft, id, categories } = req.body;
   if (!title.length) {
     return res.status(403).json({ error: "Bạn phải cung cấp tiêu đề để đăng" });
   }
@@ -496,6 +577,11 @@ server.post("/create-blog", verifyJWT, (req, res) => {
       return res
         .status(403)
         .json({ error: "Bạn phải cung cấp mô tả dưới 200 ký tự để đăng" });
+    }
+    if (!categories.length) {
+      return res
+        .status(403)
+        .json({ error: "Bạn phải cung cấp thư viện để đăng" });
     }
     if (!banner.length) {
       return res
@@ -524,7 +610,7 @@ server.post("/create-blog", verifyJWT, (req, res) => {
   if (id) {
     Blog.findOneAndUpdate(
       { blog_id },
-      { title, des, banner, content, tags, draft: draft ? draft : false }
+      { title, des, banner, content, categories, tags, draft: draft ? draft : false }
     )
       .then(() => {
         return res.status(200).json({ id: blog_id });
@@ -540,6 +626,7 @@ server.post("/create-blog", verifyJWT, (req, res) => {
       content,
       tags,
       author: authorId,
+      categories,
       blog_id,
       draft: Boolean(draft),
     });
@@ -583,7 +670,7 @@ server.post("/get-blog", (req, res) => {
       "author",
       "personal_info.fullname personal_info.username personal_info.profile_img"
     )
-    .select("title des banner content activity tags publishedAt blog_id ")
+    .select("title des banner content activity tags categories publishedAt blog_id ")
     .then((blog) => {
       User.findOneAndUpdate(
         { "personal_info.username": blog.author.personal_info.username },
@@ -642,6 +729,54 @@ server.post("/isliked-by-user", verifyJWT, (req, res) => {
   let { _id } = req.body;
 
   Notification.exists({ user: user_id, type: "like", blog: _id })
+    .then((result) => {
+      return res.status(200).json({ result });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/report-blog", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { _id, isreportedByUser } = req.body;
+
+  let incrementVal = !isreportedByUser ? 1 : -1;
+
+  Blog.findOneAndUpdate(
+    { _id },
+    { $inc: { "activity.total_reports": incrementVal } }
+  ).then((blog) => {
+    if (!isreportedByUser) {
+      let like = new Notification({
+        type: "report",
+        blog: _id,
+        notification_for: blog.author,
+        user: user_id,
+      });
+
+      like.save().then((notification) => {
+        return res.status(200).json({ report_by_user: true });
+      });
+    } else {
+      Notification.findOneAndDelete({ user: user_id, blog: _id, type: "report" })
+        .then((data) => {
+          return res.status(200).json({ report_by_user: false });
+        })
+        .catch((err) => {
+          return res.status(500).json({ error: err.message });
+        });
+    }
+  });
+});
+
+server.post("/isreported-by-user", verifyJWT, (req, res) => {
+  let user_id = req.user;
+
+  let { _id } = req.body;
+
+  Notification.exists({ user: user_id, type: "report", blog: _id })
     .then((result) => {
       return res.status(200).json({ result });
     })
@@ -977,25 +1112,16 @@ server.post("/delete-blog", verifyJWT, (req, res) => {
       return res.status(500).json({ error: err.message });
     });
 });
+
 //sv 5 tot
 // server.post("/create-event", verifyJWT, (req, res) => {
 //   let authorId = req.user;
-//   let { title, des, banner, content } = req.body;
+//   let { title, tcc } = req.body;
 //   if (!title.length) {
 //     return res.status(403).json({ error: "Bạn phải cung cấp tiêu đề để đăng" });
 //   }
-//   if (!des.length || des.length > 200) {
-//     return res
-//       .status(403)
-//       .json({ error: "Bạn phải cung cấp mô tả dưới 200 ký tự để đăng" });
-//   }
-//   if (!banner.length) {
+//   if (!tcc.length) {
 //     return res.status(403).json({ error: "Bạn phải cung cấp banner để đăng" });
-//   }
-//   if (!content.blocks.length) {
-//     return res
-//       .status(403)
-//       .json({ error: "Bạn phải cung cấp nội dung để đăng" });
 //   }
 //   let event_id =
 //     title
@@ -1004,16 +1130,12 @@ server.post("/delete-blog", verifyJWT, (req, res) => {
 //       .trim() + nanoid();
 //   let event = new Event({
 //     title,
-//     des,
-//     banner,
-//     content,
+//     tcc,
 //     author: authorId,
 //     event_id,
 //   });
 
-//   event
-//     .save()
-//     .then((event) => {
+//   event.save().then((event) => {
 //       User.findOneAndUpdate(
 //         { _id: authorId },
 //         {
@@ -1034,7 +1156,51 @@ server.post("/delete-blog", verifyJWT, (req, res) => {
 //     });
 // });
 
-//student
+server.post("/create-event", verifyJWT, (req, res) => {
+  let authorId = req.user;
+  let { title, tcc } = req.body;
+  if (!title.length) {
+    return res.status(403).json({ error: "Bạn phải cung cấp tiêu đề để đăng" });
+  }
+  if (!tcc) {
+    return res.status(403).json({ error: "Bạn phải cung cấp banner để đăng" });
+  }
+  let event_id =
+    title
+      .replace(/[^a-zA-Z0-9]/g, " ")
+      .replace(/\s+/g, "-")
+      .trim() + nanoid();
+
+  // Create a new instance of the Event model
+  const newEvent = new Event({
+    title,
+    tcc,
+    author: authorId,
+    event_id,
+  });
+
+  newEvent
+    .save()
+    .then((event) => {
+      User.findOneAndUpdate(
+        { _id: authorId },
+        {
+          $push: { events: event._id },
+        }
+      )
+        .then((user) => {
+          return res.status(200).json({ id: event.event_id });
+        })
+        .catch((err) => {
+          return res
+            .status(500)
+            .json({ error: "Cập nhật tổng số bài viết không thành công" });
+        });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
 
 server.listen(PORT, () => {
   console.log("listening on port" + PORT);

@@ -21,7 +21,7 @@ const Navbar = () => {
       axios
         .get(import.meta.env.VITE_SERVER_DOMAIN + "/new-notification", {
           headers: {
-            Authorization: `Bearer ${access_token}`,
+            'Authorization': `Bearer ${access_token}`,
           },
         })
         .then(({ data }) => {
@@ -43,7 +43,7 @@ const Navbar = () => {
   };
   const handleSearch = (e) => {
     let query = e.target.value;
-    if (e.keyCode === 13 && query.length) {
+    if (e.keyCode == 13 && query.length) {
       navigate(`/search/${query}`);
     }
   };
@@ -82,23 +82,28 @@ const Navbar = () => {
           >
             <i className="fi fi-rr-search text-2xl"></i>
           </button>
-          </div>
+        </div>
         {access_token ? (
           <>
-          {role === "Sinh viên" ? null : (
-            <Link to="/editor" className="hidden lg:flex gap-2 link">
-              <i className="fi fi-rr-file-edit"></i>
-              <p>Tạo bài viết"</p>
-            </Link>
-          )}
+            {role === "Sinh viên" ? (
+              <Link to="/event" className="hidden lg:flex gap-2 link">
+                <i className="fi fi-rr-file-edit"></i>
+                <p>Gửi hồ sơ sinh viên 5 tốt</p>
+              </Link>
+            ) : (
+              <Link to="/editor" className="hidden lg:flex gap-2 link">
+                <i className="fi fi-rr-file-edit"></i>
+                <p>Tạo bài viết</p>
+              </Link>
+            )}
             <Link to="/dashboard/notifications">
               <button className="w-12 h-12 rounded-full bg-grey relative hover:bg-black/10">
                 <i className="fi fi-rr-bell text-2xl block mt-1"></i>
-                {
-                  new_notification_available ?
+                {new_notification_available ? (
                   <span className="bg-red w-3 h-3 rounded-full absolute z-10 top-2 right-2"></span>
-                  : ""
-                }
+                ) : (
+                  ""
+                )}
               </button>
             </Link>
             <div

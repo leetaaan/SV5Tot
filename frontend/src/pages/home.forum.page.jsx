@@ -10,6 +10,8 @@ import NodataMessage from "../components/nodata.component";
 import { filterPaginationData } from "../common/filter-pagination-data";
 import LoadMoreDataBtn from "../components/load-more.component";
 import MenuComponents from "../components/menu.components";
+import { menuItems } from "../components/menu-links";
+import { Link } from "react-router-dom";
 
 const HomeForumPage = () => {
   let [blogs, setBlogs] = useState(null);
@@ -24,7 +26,7 @@ const HomeForumPage = () => {
     "hội nhập tốt",
     "ctk44",
     "cntt",
-    "dlu",
+    "khoa toán – tin học",
     "tag test",
   ];
 
@@ -106,7 +108,7 @@ const HomeForumPage = () => {
       <div className="flex justify-center">
         <MenuComponents />
       </div>
-      
+
       <section className="h-cover flex justify-center gap-10">
         <div className="w-full">
           <InPageNavigation
@@ -114,7 +116,7 @@ const HomeForumPage = () => {
             defaultHidden={["bài viết xu hướng"]}
           >
             <>
-              {blogs === null ? (
+              {blogs == null ? (
                 <Loader />
               ) : blogs.results.length ? (
                 blogs.results.map((blog, i) => {
@@ -203,6 +205,35 @@ const HomeForumPage = () => {
               )}
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="h-cover flex justify-center gap-10">
+        <div className="w-full">
+          {menuItems.map((items, i) => (
+            <div key={i} className="relative mb-8 bg-white border-b border-grey block overflow-x-auto">
+              <Link to={`/search/${items.title}`}>
+                <p className={"p-4 px-5 capitalize text-black border-b border-dark-grey"}>{items.title}</p>
+              </Link>
+              {
+                items.submenu ? items.submenu.map((item, i) => (
+                  <div key={i} className="">
+                    <Link to={`/search/${item.title}`}>
+                      <p className={"p-4 px-5 capitalize text-black"}>{item.title}</p>
+                    </Link>
+                    {
+                      item.submenu ? item.submenu.map((item, i) => (
+                        <Link key={i} to={`/search/${item.title}`} className="flex px-10">
+                          <i className="fi fi-rr-arrow-small-right"></i>
+                          <p className={"capitalize text-black"}>{item.title}</p>
+                        </Link>
+                      )) : null
+                    }
+                  </div>
+                )) : null
+              }
+            </div>
+          ))}
         </div>
       </section>
     </AnimationWrapper>
