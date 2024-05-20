@@ -224,7 +224,7 @@ const HomeForumPage = () => {
                     {
                       item.submenu ? item.submenu.map((item, i) => (
                         <Link key={i} to={`/search/${item.title}`} className="flex px-10">
-                          <i class="fi fi-rr-arrow-small-right"></i>
+                          <i className="fi fi-rr-arrow-small-right"></i>
                           <p className={"capitalize text-black"}>{item.title}</p>
                         </Link>
                       )) : null

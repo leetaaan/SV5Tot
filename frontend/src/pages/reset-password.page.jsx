@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const ResetPasswordForm = () => {
   const [password, setPassword] = useState("");
+  const [passwordVisible, SetPasswordVisible] = useState(false);
   const { token } = useParams();
   const navigate = useNavigate();
 
@@ -36,11 +37,21 @@ const ResetPasswordForm = () => {
           <div className="relative w-[100%] mb-4">
             <input
               placeholder="Mật khẩu"
-              type="password"
+              type={
+                "password" ? (passwordVisible ? "text" : "password") : ""
+              }
               onChange={(e) => setPassword(e.target.value)}
               className="input-box"
             />
             <i className={"fi fi-rr-envelope input-icon"}></i>
+            <i
+          className={
+            "fi fi-rr-eye" +
+            (!passwordVisible ? "-crossed" : "") +
+            " input-icon left-[auto] right-4 cursor-pointer"
+          }
+          onClick={() => SetPasswordVisible((currentVal) => !currentVal)}
+        ></i>
           </div>
           <button className="btn-dark center mt-14" type="submit">
             Xác nhận
