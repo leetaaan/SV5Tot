@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import InputBox from "../components/input.component";
 import googleIcon from "../imgs/google.png";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import AnimationWrapper from "../common/page-animation";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
@@ -14,6 +14,8 @@ const UserAuthForm = ({ type }) => {
     userAuth: { access_token },
     setUserAuth,
   } = useContext(UserContext);
+
+  const navigate = useNavigate()
 
   const userAuthThroughServer = (serverRoute, formData) => {
     axios
@@ -110,7 +112,9 @@ const UserAuthForm = ({ type }) => {
             placeholer="Mật khẩu"
             icon="fi-rr-key"
           />
-
+          <Link to={"/forgot-password"}>
+            <p className="text-s text-end text-sm">Quên mật khẩu?</p>
+          </Link>
           <button
             className="btn-dark center mt-14"
             type="submit"

@@ -17,54 +17,27 @@ const SearchPage = () => {
   let [users, setUsers] = useState(null);
 
   const searchBlogs = async ({ page = 1, create_new_arr = false }) => {
-    // axios
-    //   .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", {
-    //     query,
-    //     page,
-    //     tag: query,
-    //     category: query
-    //   })
-    //   .then(async ({ data }) => {
-    //     let formatData = await filterPaginationData({
-    //       state: blogs,
-    //       data: data.blogs,
-    //       page,
-    //       countRoute: "/search-blogs-count",
-    //       data_to_send: { query },
-    //       create_new_arr,
-    //     });
-    //     setBlog(formatData);
-    //     console.log(formatData);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_DOMAIN}/search-blogs`,
-        {
-          query,
-          page,
-          tag: query,
-          category: query,
-        }
-      );
-  
-      const formatData = await filterPaginationData({
-        state: blogs,
-        data: response.data.blogs,
+    axios
+      .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", {
+        query,
         page,
-        countRoute: "/search-blogs-count",
-        data_to_send: { query },
-        create_new_arr,
+        tag: query,
+      })
+      .then(async ({ data }) => {
+        let formatData = await filterPaginationData({
+          state: blogs,
+          data: data.blogs,
+          page,
+          countRoute: "/search-blogs-count",
+          data_to_send: { query },
+          create_new_arr,
+        });
+        setBlog(formatData);
+        console.log(formatData);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-  
-      setBlog(formatData);
-      console.log(formatData);
-    } catch (error) {
-      console.error(error);
-      // Display a user-friendly error message
-    }
   };
 
   const fetchUsers = () => {

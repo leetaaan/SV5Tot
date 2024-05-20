@@ -21,28 +21,18 @@ export const filterPaginationData = async ({
   if (state != null && !create_new_arr) {
     obj = { ...state, results: [...state.results, ...data], page: page };
   } else {
-  //   await axios
-  //     .post(
-  //       import.meta.env.VITE_SERVER_DOMAIN + countRoute,
-  //       data_to_send,
-  //       headers
-  //     )
-  //     .then(({ data: { totalDocs } }) => {
-  //       obj = { results: data, page: 1, totalDocs };
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
-  // return obj;
-  const countResponse = await axios.post(
-    `${import.meta.env.VITE_SERVER_DOMAIN}${countRoute}`,
-    data_to_send,
-    headers
-  );
-
-  obj = { results: data, page: 1, totalDocs: countResponse.data.totalDocs };
-}
-
-return obj;
+    await axios
+      .post(
+        import.meta.env.VITE_SERVER_DOMAIN + countRoute,
+        data_to_send,
+        headers
+      )
+      .then(({ data: { totalDocs } }) => {
+        obj = { results: data, page: 1, totalDocs };
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  return obj;
 };

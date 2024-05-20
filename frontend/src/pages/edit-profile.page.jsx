@@ -86,7 +86,7 @@ const EditProfile = () => {
                 { url },
                 {
                   headers: {
-                    Authorization: `Bearer ${access_token}`,
+                    'Authorization': `Bearer ${access_token}`,
                   },
                 }
               )

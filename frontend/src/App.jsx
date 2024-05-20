@@ -16,6 +16,9 @@ import EditProfile from "./pages/edit-profile.page";
 import Admin from "./pages/admin/admin";
 import Notifications from "./pages/notifications.page";
 import ManageBlogs from "./pages/manage-blogs.page";
+import CommunityStandards from "./pages/community-standards-page";
+import ForgotPasswordForm from "./pages/forgot-password.page";
+import ResetPasswordForm from "./pages/reset-password.page";
 
 export const UserContext = createContext({});
 
@@ -49,10 +52,13 @@ const App = () => {
             <Route path="change-password" element={<ChangePassword />} />
           </Route>
           <Route path="/signin" element={<UserAuthForm type="sign-in" />} />
-          {/* <Route path="/signup" element={<UserAuthForm type="sign-up" />} /> */}
+          <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordForm />} />
+          <Route path="/signup" element={<UserAuthForm type="sign-up" />} />
           <Route path="search/:query" element={<SearchPage />} />
           <Route path="user/:id" element={<ProfilePage />} />
           <Route path="blog/:blog_id" element={<BlogPage />} />
+          <Route path="community-standards" element={<CommunityStandards />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
         <Route path="/admin" element={<Admin />} />

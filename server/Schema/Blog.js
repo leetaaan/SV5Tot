@@ -42,6 +42,10 @@ const blogSchema = mongoose.Schema(
         type: Number,
         default: 0,
       },
+      total_reports: {
+        type: Number,
+        default: 0,
+      },
       total_comments: {
         type: Number,
         default: 0,

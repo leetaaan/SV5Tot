@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import {GoogleAuthProvider, getAuth, signInWithPopup, sendEmailVerification  } from 'firebase/auth'
+import {GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: "AIzaSyBQE-4bSfl3-k0RQ4vdbjr-5jPVJGGi19Y",
@@ -27,8 +27,3 @@ export const authWithGoogle = async () => {
     })
     return user
 }
-sendEmailVerification(auth.currentUser)
-  .then(() => {
-    // Email verification sent!
-    // ...
-  });
