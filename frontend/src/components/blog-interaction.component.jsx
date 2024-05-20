@@ -38,7 +38,7 @@ const BlogInteraction = () => {
           { _id },
           {
             headers: {
-              Authorization: `Bearer ${access_token}`,
+              'Authorization': `Bearer ${access_token}`,
             },
           }
         )
@@ -49,13 +49,13 @@ const BlogInteraction = () => {
           console.log(err);
         });
 
-      axios
+        axios
         .post(
           import.meta.env.VITE_SERVER_DOMAIN + "/isreported-by-user",
           { _id },
           {
             headers: {
-              Authorization: `Bearer ${access_token}`,
+              'Authorization': `Bearer ${access_token}`,
             },
           }
         )
@@ -81,11 +81,12 @@ const BlogInteraction = () => {
           { _id, islikedByUser },
           {
             headers: {
-              Authorization: `Bearer ${access_token}`,
+              'Authorization': `Bearer ${access_token}`,
             },
           }
         )
-        .then(({ data }) => {})
+        .then(({ data }) => {
+        })
         .catch((err) => {
           console.log(err);
         });
@@ -107,14 +108,12 @@ const BlogInteraction = () => {
           { _id, isreportedByUser },
           {
             headers: {
-              Authorization: `Bearer ${access_token}`,
+              'Authorization': `Bearer ${access_token}`,
             },
           }
         )
         .then(({ data }) => {
-          toast.success(
-            "Báo cáo bài viết vi phạm tiêu chuẩn cộng đồng thành công"
-          );
+          toast.success("Báo cáo bài viết vi phạm tiêu chuẩn cộng đồng thành công")
         })
         .catch((err) => {
           console.log(err);
@@ -145,7 +144,7 @@ const BlogInteraction = () => {
           </button>
           <p className="text-xl text-dark-grey">{total_likes}</p>
           <button
-            onClick={() => setCommentsWrapper((preVal) => !preVal)}
+            onClick={() => setCommentsWrapper(preVal => !preVal)}
             className="w-10 h-10 rounded-full items-center justify-center bg-grey/80"
           >
             <i className="fi fi-rr-comment-dots"></i>
@@ -163,12 +162,10 @@ const BlogInteraction = () => {
             </Link>
           ) : (
             <>
-              <button onClick={handleReport}>
-                <i className="underline hover:text-red">Báo cáo</i>
-              </button>
-              <Link to={`/community-standards`}>
-                <i className="fi fi-rr-info hover:text-dark-grey"></i>
-              </Link>
+          <button onClick={handleReport}>
+            <i className="underline hover:text-red">Báo cáo</i>
+          </button>
+          <Link to={`/community-standards`}><i className="fi fi-rr-info hover:text-dark-grey"></i></Link>
             </>
           )}
         </div>
