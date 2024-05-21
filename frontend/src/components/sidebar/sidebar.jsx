@@ -15,7 +15,7 @@ const Sidebar = () => {
     {
       key: "dashboard",
       icon: <ProductOutlined />,
-      label: (<Link to='/admin/profile' className="" title="">Danh mục</Link>),
+      label: (<Link to='/admin/dashboards' className="" title="">Danh mục</Link>),
     },
     {
       key: "users",

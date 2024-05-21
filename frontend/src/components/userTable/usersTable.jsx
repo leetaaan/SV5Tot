@@ -81,7 +81,7 @@ const UsersTable = () => {
 
   return (
     <div className="usersTable">
-      <div className="usersTable__search" style={{ marginBottom: 16 }}>
+      <div className="usersTable__search flex w-full" style={{ marginBottom: 16 }}>
         <Input
           placeholder="Tìm kiếm..."
           prefix={<SearchOutlined />}
@@ -89,9 +89,17 @@ const UsersTable = () => {
           style={{ width: 200, marginRight: 8 }}
           allowClear
         />
-        <Button type="primary" onClick={handleAdd}>
-          Thêm
-        </Button>
+        <div className="userTable__btn">
+          <Button className="" type="primary" onClick={handleAdd}>
+            Thêm
+          </Button>
+          <Button className=" bg-pink-500" type="primary" onClick={handleAdd}>
+            Xuất file
+          </Button>
+          <Button className="" type="primary" onClick={handleAdd}>
+            Thêm file
+          </Button>
+        </div>
       </div>
       <Table
         dataSource={exampleCriteria}

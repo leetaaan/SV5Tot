@@ -1,5 +1,6 @@
 .home {
   height: 100vh;
+  overflow: hidden;
 
   &__sider {
     height: 100vh;
@@ -45,5 +46,4 @@
 
 .ant-layout{
   height: 100vh;
-  overflow: hidden;
 }

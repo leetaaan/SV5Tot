@@ -14,11 +14,12 @@ import SideNav from "./components/sidenavbar.component";
 import ChangePassword from "./pages/change-password.page";
 import EditProfile from "./pages/edit-profile.page";
 import Admin from "./pages/admin/adminLayout";
-import InfomationTable from "./components/infomationTable/infimationTable";
+import InfomationTable from "./components/infomationTable/informationTable";
 import Notifications from "./pages/notifications.page";
 import ManageBlogs from "./pages/manage-blogs.page";
 import UsersTable from "./components/userTable/usersTable";
 import StudentTable from "./components/studentTable/studentTable";
+import DashBoard from "./components/dashboard/dashboard";
 export const UserContext = createContext({});
 
 const App = () => {
@@ -60,10 +61,10 @@ const App = () => {
         <Route path="/admin" element={<Admin/>}/>
 
         <Route
-          path="/admin/profile"
+          path="/admin/dashboards"
           element={
             <Admin>
-
+              <DashBoard/>
             </Admin>
           }
         />

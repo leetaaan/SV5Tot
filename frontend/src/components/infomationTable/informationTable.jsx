@@ -91,18 +91,6 @@ const InfomationTable = () => {
 
   return (
     <div className="infomationTable">
-      <div className="infomationTable__search" style={{ marginBottom: 16 }}>
-        <Input
-          placeholder="Tìm kiếm..."
-          prefix={<SearchOutlined />}
-          onChange={handleSearch}
-          style={{ width: 200, marginRight: 8 }}
-          allowClear
-        />
-        <Button type="primary" onClick={handleAdd}>
-          Thêm
-        </Button>
-      </div>
       <Table
         dataSource={exampleData}
         columns={InfoColumns({
@@ -111,17 +99,9 @@ const InfomationTable = () => {
           handleViewPersonalInfo,
         })}
         pagination={false}
+        scroll={{ x: "calc(700px + 80%", y:300}}
       />
-      <Pagination
-        current={currentPage}
-        pageSize={pageSize}
-        total={totalItems}
-        onChange={handlePageChange}
-        showSizeChanger
-        onShowSizeChange={handleShowSizeChange}
-        showQuickJumper
-        className="infomationTable__pagination"
-      />
+      
       <UserModal
         visible={isModalVisible}
         onCreate={handleOk}
