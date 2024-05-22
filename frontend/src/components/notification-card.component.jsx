@@ -90,10 +90,10 @@ const NotificationCard = ({ data, index, notificationState }) => {
             </Link>
             <span className="font-normal">
               {type == "like"
-                ? "liked your blog"
+                ? "thích bài viết"
                 : type == "comment"
-                ? "commented on"
-                : "replied on"}
+                ? "bình luận vào bài viết"
+                : "trả lời bình luận"}
             </span>
           </h1>
 

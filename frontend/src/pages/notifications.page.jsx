@@ -19,7 +19,7 @@ const Notifications = () => {
   const [filter, setFilter] = useState("Tất cả");
   const [ notifications, setNotifications ] = useState(null)
 
-  let filters = ["Tất cả", "Thich", "comment", "reply", "report"];
+  let filters = ["Tất cả", "like", "comment", "reply", "report"];
 
   const fetchNotifications = ({ page, deletedDocCount = 0 }) => {
     axios
