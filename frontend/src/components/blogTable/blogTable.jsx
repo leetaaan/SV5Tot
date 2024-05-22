@@ -1,8 +1,9 @@
 // UserTable.js
 import { Table, Button, Space, Input, Pagination } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+import axios from "axios";
 
-import React, { useState } from "react";
+import { useState,useEffect } from "react";
 import WarningModal from "../modals/warningModal";
 import exampleCriteria from "../../assets/json/exampleCriteria";
 import BlogColumns from "../../assets/columns/blogColumn";
@@ -17,6 +18,7 @@ const BlogTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const handleAdd = () => {
     setIsModalVisible(true);
@@ -61,8 +63,25 @@ const BlogTable = () => {
 
   const handleShowSizeChange = (current, size) => {
     setPageSize(size);
-    setCurrentPage(1); // Reset to first page when changing page size
+    setCurrentPage(1); 
   };
+
+  useEffect(() => {
+    // Fetch data from API or database
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get('/api/events'); 
+        setDataSource(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
 
   return (
     <div className="usersTable">
@@ -86,7 +105,7 @@ const BlogTable = () => {
           handleViewPersonalInfo,
         })}
         pagination={false}
-        scroll={{ x: "calc(700px + 80%)", y: "80vh" }}
+        scroll={{ x: "calc(700px + 80%)", y: 700 }}
       />
       <Pagination
         current={currentPage}

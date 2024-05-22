@@ -25,6 +25,7 @@ import DashBoard from "./components/dashboard/dashboard";
 import BlogTable from "./components/blogTable/blogTable";
 import AddForm from "./components/addForm/addForm";
 import InformationTable from "./components/infomationTable/informationTable"
+import CriteriaTable from "./components/criteriaTable/criteriaTable";
 
 export const UserContext = createContext({});
 
@@ -106,7 +107,7 @@ const App = () => {
           path="/admin/criterias"
           element={
             <Admin>
-              <InformationTable />
+              <CriteriaTable/>
             </Admin>
           }
         />

@@ -4,12 +4,10 @@ import { SearchOutlined } from "@ant-design/icons";
 
 import React, { useState } from "react";
 import WarningModal from "../modals/warningModal";
-import CriteriaModal from "../modals/criteriaModal";
-import exampleCriteria from "../../assets/json/exampleCriteria";
-import UserColumns from "../../assets/columns/userColumn";
+import CriteriaColumns from "../../assets/columns/criteriaColumn";
 import { Link } from "react-router-dom";
 
-const UsersTable = () => {
+const CriteriaTable = () => {
   const [dataSource, setDataSource] = useState([]); //data
   const [isModalVisible, setIsModalVisible] = useState(false); //model
   const [selectedRecord, setSelectedRecord] = useState(null); //
@@ -62,7 +60,7 @@ const UsersTable = () => {
 
   const handleShowSizeChange = (current, size) => {
     setPageSize(size);
-    setCurrentPage(1); // Reset to first page when changing page size
+    setCurrentPage(1); 
   };
 
   return (
@@ -78,36 +76,10 @@ const UsersTable = () => {
           style={{ width: 200, marginRight: 8 }}
           allowClear
         />
-        <div className="userTable__btn mt-1">
-          <Link
-            to="/admin/addUser"
-            className=" px-4 rounded-lg py-2 bg-blue text-white hover:text-blue hover:bg-white hover:border transition duration-700 ease-in-out mr-2"
-            type="primary"
-            onClick={handleAdd}
-          >
-            Thêm
-          </Link>
-          <Link
-            to="/admin/addUser"
-            className=" px-4 rounded-lg py-2 bg-red text-white hover:text-red hover:bg-white hover:border transition duration-700 ease-in-out mr-2"
-            type="primary"
-            onClick={handleAdd}
-          >
-            Xuất file
-          </Link>
-          <Link
-            to="/admin/addUser"
-            className=" px-4 rounded-lg py-2 bg-green hover:text-green hover:bg-white hover:border transition duration-700 ease-in-out text-white mr-2"
-            type="primary"
-            onClick={handleAdd}
-          >
-            Thêm file
-          </Link>
-        </div>
       </div>
       <Table
         dataSource={dataSource}
-        columns={UserColumns({
+        columns={CriteriaColumns({
           handleEdit,
           handleDelete,
           handleViewPersonalInfo,
@@ -136,4 +108,4 @@ const UsersTable = () => {
   );
 };
 
-export default UsersTable;
+export default CriteriaTable;

@@ -10,8 +10,6 @@ const Navbar = () => {
     </Typography.Title>
 
     <Flex align='center' gap='3rem'>
-      <Search placeholder='Search' allowClear/>
-
       <Flex className="navbar-icon">
         <MessageOutlined className='navbar-icon--style'/>
         <NotificationOutlined className='navbar-icon--style'/>

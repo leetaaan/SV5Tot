@@ -91,6 +91,18 @@ const InfomationTable = () => {
 
   return (
     <div className="infomationTable">
+       <div
+        className="information flex w-full"
+        style={{ marginBottom: 16 }}
+      >
+        <Input
+          placeholder="Tìm kiếm..."
+          prefix={<SearchOutlined />}
+          onChange={handleSearch}
+          style={{ width: 200, marginRight: 8 }}
+          allowClear
+        />
+      </div>
       <Table
         dataSource={exampleData}
         columns={InfoColumns({
@@ -99,19 +111,18 @@ const InfomationTable = () => {
           handleViewPersonalInfo,
         })}
         pagination={false}
-        scroll={{ x: "calc(700px + 80%", y:300}}
+        scroll={{ x: "calc(700px + 80%", y:700}}
       />
       
-      <UserModal
-        visible={isModalVisible}
-        onCreate={handleOk}
-        onCancel={handleCancel}
-        selectedRecord={selectedRecord}
-        columns={InfoColumns({
-          handleEdit,
-          handleDelete,
-          handleViewPersonalInfo,
-        })}
+      <Pagination
+        current={currentPage}
+        pageSize={pageSize}
+        total={totalItems}
+        onChange={handlePageChange}
+        showSizeChanger
+        onShowSizeChange={handleShowSizeChange}
+        showQuickJumper
+        className="infomationTable__pagination"
       />
       <WarningModal
         visible={!!deleteRecord}

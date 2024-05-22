@@ -39,9 +39,9 @@ const Sidebar = () => {
   return (
     <>
       <Flex align="center" justify="center">
-        <div className="sidebar__logo">
+        <Link to="/" className="sidebar__logo">
           <img src={images.logo} alt="logo"/>
-        </div>
+        </Link>
       </Flex>
       <Menu
         mode="inline"
