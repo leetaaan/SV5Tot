@@ -39,7 +39,7 @@ const ChangePassword = () => {
     axios
       .post(import.meta.env.VITE_SERVER_DOMAIN + "/change-password", formData, {
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          'Authorization': `Bearer ${access_token}`,
         },
       })
       .then(() => {

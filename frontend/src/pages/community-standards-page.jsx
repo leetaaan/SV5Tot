@@ -1,11 +1,14 @@
 import React from "react";
-
+import imgBanner from "../imgs/tieuchuancongdong.png";
 const CommunityStandards = () => {
   return (
     <>
+    <div className="">
+      <img src={imgBanner} alt="" />
+    </div>
       <div className="center max-w-[900px] py-10 max-lg:px-[5vw] p-4">
         <p>
-          Chúng tôi hiểu rằng điều quan trọng đối với <strong><strong>"Sinh viên 5 tốt"</strong></strong> là phải trở thành
+          Chúng tôi hiểu rằng điều quan trọng đối với <strong>"Sinh viên 5 tốt"</strong> là phải trở thành
           nơi mà mọi người có thể cảm thấy tự tin để giao tiếp, nhưng chúng tôi
           cũng biết rằng cần phải xem trọng vai trò của bản thân trong việc ngăn
           chặn việc lạm dụng dịch vụ của mình. Đó là lý do <strong>"Sinh viên 5 tốt"</strong> phát triển

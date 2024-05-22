@@ -59,11 +59,10 @@ const App = () => {
           </Route>
           <Route path="/signin" element={<UserAuthForm type="sign-in" />} />
           <Route path="/forgot-password" element={<ForgotPasswordForm />} />
-          <Route
-            path="/reset-password/:token"
-            element={<ResetPasswordForm />}
-          />
+          <Route path="/reset-password/:id/:token" element={<ResetPasswordForm />}
+           />
           <Route path="/signup" element={<UserAuthForm type="sign-up" />} />
+          
           <Route path="search/:query" element={<SearchPage />} />
           <Route path="user/:id" element={<ProfilePage />} />
           <Route path="blog/:blog_id" element={<BlogPage />} />
