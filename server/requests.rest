@@ -35,7 +35,17 @@
 #     "content": {
 #         "blocks": [ 1, 2 ]
 #     },
-#     "tags": [ "1", "2" ]
+#     "tags": [ "1", "2" ],
+#     "categories": "Hoạt động cấp trường"
+# }
+
+# POST http://localhost:3000/create-event
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDE4OTljNGQ4NzY3OTVjZjIyMjBjNSIsImlhdCI6MTcxMjEyMzQ1OH0.e_55a2DL_HhCpjcSX5KmdhkbGBev2tpZSuBEAwQGieU
+
+# {
+#     "title": "blog test #2sdf",
+#     "tcc": "https://example.com/image.jpg"
 # }
 
 # GET  http://localhost:3000/latest-blogs
@@ -46,7 +56,7 @@
 # Content-Type: application/json
 
 # {
-#     "tag": "tag 1"
+#     "categories": "Khoa Công nghệ Thông tin"
 # }
 
 # POST  http://localhost:3000/search-users
@@ -88,11 +98,18 @@
 # Content-Type: application/json
 # Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MmJiYTY2NmQ3ZDE3Mjg1MzUxYzU2MyIsImlhdCI6MTcxNDE2MDY2MH0.iqVedrNysTUThJ7XEcd-DBldbYSbTDi1UNeB7xQSr6Q
 
-POST http://localhost:3000/user-written-blogs
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MmM3ZDNjZWQzY2M5YzA4MTczYjFiZiIsImlhdCI6MTcxNDQ2MDYzNX0.-7qyQum2rhA5hi_Zcrjj8FLOH66u-WF-KGHYnRXEK1U
+# POST http://localhost:3000/user-written-blogs
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MmM3ZDNjZWQzY2M5YzA4MTczYjFiZiIsImlhdCI6MTcxNDQ2MDYzNX0.-7qyQum2rhA5hi_Zcrjj8FLOH66u-WF-KGHYnRXEK1U
+# Content-Type: application/json
+
+# {
+#     "page": 1,
+#     "draft": false
+# }
+
+POST  http://localhost:3000/forgot-password
 Content-Type: application/json
 
 {
-    "page": 1,
-    "draft": false
+    "email": "2011436@dlu.edu.vn"
 }

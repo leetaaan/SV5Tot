@@ -6,7 +6,7 @@
 cd server
 ```
 ```bash
-#npm start
+$ npm start
 ```
 
 ## 2. Run Frontend
@@ -14,7 +14,7 @@ cd server
 cd frontend
 ```
 ```bash
-#npm run dev
+$ npm run dev
 ```
 
 ## Tài khoản mẫu

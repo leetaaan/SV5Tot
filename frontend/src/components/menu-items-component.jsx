@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 
 import Dropdown from "./menu-dropdown-component";
+import { useNavigate } from "react-router-dom";
 
 const MenuItems = ({ items, depthLevel }) => {
   const [dropdown, setDropdown] = useState(false);
-
+  let navigate = useNavigate();
   let ref = useRef();
 
   useEffect(() => {
@@ -30,6 +31,10 @@ const MenuItems = ({ items, depthLevel }) => {
     window.innerWidth > 960 && setDropdown(false);
   };
 
+  const handleSearchCategory = () => {
+    navigate(`/search/${items.title}`);
+    setDropdown((prev) => !prev)
+  }
   return (
     <li
       className="menu-items"
@@ -41,7 +46,7 @@ const MenuItems = ({ items, depthLevel }) => {
         <>
           <button
             aria-expanded={dropdown ? "true" : "false"}
-            onClick={() => setDropdown((prev) => !prev)}
+            onClick={handleSearchCategory}
           >
             {items.title}{" "}
             {depthLevel > 0 ? (
@@ -57,7 +62,7 @@ const MenuItems = ({ items, depthLevel }) => {
           />
         </>
       ) : (
-        <button> {items.title} </button>
+        <button onClick={handleSearchCategory}> {items.title} </button>
       )}
     </li>
   );

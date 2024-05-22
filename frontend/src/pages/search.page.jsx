@@ -16,7 +16,7 @@ const SearchPage = () => {
   let [blogs, setBlog] = useState(null);
   let [users, setUsers] = useState(null);
 
-  const searchBlogs = ({ page = 1, create_new_arr = false }) => {
+  const searchBlogs = async ({ page = 1, create_new_arr = false }) => {
     axios
       .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", {
         query,
@@ -33,6 +33,7 @@ const SearchPage = () => {
           create_new_arr,
         });
         setBlog(formatData);
+        console.log(formatData);
       })
       .catch((err) => {
         console.log(err);
@@ -89,7 +90,7 @@ const SearchPage = () => {
           defaultHidden={["Tài khoản liên quan"]}
         >
           <>
-            {blogs === null ? (
+            {blogs == null ? (
               <Loader />
             ) : blogs.results.length ? (
               blogs.results.map((blog, i) => {
