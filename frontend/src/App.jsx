@@ -14,7 +14,6 @@ import SideNav from "./components/sidenavbar.component";
 import ChangePassword from "./pages/change-password.page";
 import EditProfile from "./pages/edit-profile.page";
 import Admin from "./pages/admin/adminLayout";
-import InfomationTable from "./components/infomationTable/informationTable";
 import Notifications from "./pages/notifications.page";
 import ManageBlogs from "./pages/manage-blogs.page";
 import CommunityStandards from "./pages/community-standards-page";
@@ -25,6 +24,7 @@ import StudentTable from "./components/studentTable/studentTable";
 import DashBoard from "./components/dashboard/dashboard";
 import BlogTable from "./components/blogTable/blogTable";
 import AddForm from "./components/addForm/addForm";
+import InformationTable from "./components/infomationTable/informationTable"
 
 export const UserContext = createContext({});
 
@@ -53,16 +53,20 @@ const App = () => {
             <Route path="blogs" element={<ManageBlogs />} />
             <Route path="notifications" element={<Notifications />} />
           </Route>
+
           <Route path="settings" element={<SideNav />}>
             <Route path="edit-profile" element={<EditProfile />} />
             <Route path="change-password" element={<ChangePassword />} />
           </Route>
+
           <Route path="/signin" element={<UserAuthForm type="sign-in" />} />
           <Route path="/forgot-password" element={<ForgotPasswordForm />} />
-          <Route path="/reset-password/:id/:token" element={<ResetPasswordForm />}
-           />
+          <Route
+            path="/reset-password/:id/:token"
+            element={<ResetPasswordForm />}
+          />
           <Route path="/signup" element={<UserAuthForm type="sign-up" />} />
-          
+
           <Route path="search/:query" element={<SearchPage />} />
           <Route path="user/:id" element={<ProfilePage />} />
           <Route path="blog/:blog_id" element={<BlogPage />} />
@@ -93,7 +97,7 @@ const App = () => {
           path="/admin/students"
           element={
             <Admin>
-              <InfomationTable />
+              <InformationTable />
             </Admin>
           }
         />
@@ -102,7 +106,7 @@ const App = () => {
           path="/admin/criterias"
           element={
             <Admin>
-              <InfomationTable />
+              <InformationTable />
             </Admin>
           }
         />
