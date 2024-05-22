@@ -1,5 +1,5 @@
 // UserTable.js
-import { Table, Button, Space, Input, Pagination } from "antd";
+import { Table, Button  , Space, Input, Pagination } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 import React, { useState } from "react";
@@ -93,10 +93,10 @@ const UsersTable = () => {
           <Button className="" type="primary" onClick={handleAdd}>
             Thêm
           </Button>
-          <Button className=" bg-pink-500" type="primary" onClick={handleAdd}>
+          <Button className="ml-2 bg-red !important" type="primary" onClick={handleAdd}>
             Xuất file
           </Button>
-          <Button className="" type="primary" onClick={handleAdd}>
+          <Button className="ml-2 bg-teal" type="primary" onClick={handleAdd}>
             Thêm file
           </Button>
         </div>

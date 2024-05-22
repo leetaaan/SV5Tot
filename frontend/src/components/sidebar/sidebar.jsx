@@ -30,7 +30,7 @@ const Sidebar = () => {
     {
       key: "posts",
       icon: <CarryOutOutlined />,
-      label: (<Link to='/admin/posts' className="" title="">Bài viết</Link>),
+      label: (<Link to='/admin/blogs' className="" title="">Bài viết</Link>),
     },
   ];
 

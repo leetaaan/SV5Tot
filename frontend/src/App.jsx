@@ -20,6 +20,8 @@ import ManageBlogs from "./pages/manage-blogs.page";
 import UsersTable from "./components/userTable/usersTable";
 import StudentTable from "./components/studentTable/studentTable";
 import DashBoard from "./components/dashboard/dashboard";
+import BlogTable from "./components/blogTable/blogTable"
+
 export const UserContext = createContext({});
 
 const App = () => {
@@ -97,10 +99,10 @@ const App = () => {
         />
 
 <Route
-          path="/admin/posts"
+          path="/admin/blogs"
           element={
             <Admin>
-              <InfomationTable />
+              <BlogTable/>
             </Admin>
           }
         />
