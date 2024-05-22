@@ -1,32 +1,369 @@
-import React, { useContext, useEffect, useCallback } from "react";
+import React, { useContext, useCallback, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../imgs/logo.png";
 import AnimationWrapper from "../common/page-animation";
-import defaultBanner from "../imgs/event banner.png";
+import defaultBanner from "../imgs/blog banner.png";
 import { Toaster, toast } from "react-hot-toast";
-import EditorJS from "@editorjs/editorjs";
-import { tools } from "./tools.component";
 import { UserContext } from "../App";
 import { EditorEventContext } from "../pages/editor.sv5tot.page";
 import axios from "axios";
+import { uploadToCloudinary } from "../common/cloundinary";
 
 const EventEditor = () => {
   let {
     event,
-    event: { title, tcc },
+    event: {
+      title,
+      tcc,
+      ddtbb,
+      ddt1,
+      ddt2,
+      ddt3,
+      ddt4,
+      httbb,
+      htt1,
+      htt2,
+      htt3,
+      htt4,
+      htt5,
+      tlt1,
+      tlt2,
+      tnt1,
+      tnt2,
+      hntbb,
+      hnt1,
+      hnt2,
+      hnt3,
+    },
     setEvent,
-    textEditor,
-    setTextEditor,
-    setEditorState,
   } = useContext(EditorEventContext);
 
   let {
     userAuth: { access_token },
   } = useContext(UserContext);
 
-  useEffect(() => {
-  }, []);
+  let navigate = useNavigate();
 
+  const handleBannerUpload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, tcc: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDDTBBUpload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url1 = await uploadToCloudinary(filename);
+        setEvent({ ...event, ddtbb: url1, tcc: event.tcc});
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleHTTBBUpload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, httbb: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleHNTBBUpload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, hntbb: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDDT1Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, ddt1: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDDT2Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, ddt2: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDDT3Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, ddt3: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+  
+  const handleDDT4Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, ddt4: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+  
+  const handleHTT1Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, htt1: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleHTT2Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, htt2: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleHTT3Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, htt3: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleHTT4Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, htt4: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleHTT5Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, htt5: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+  
+  const handleTLT1Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, tlt1: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleTLT2Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, tlt2: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleTNT1Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, tnt1: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleTNT2Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, tnt2: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleHNT1Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, hnt1: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+  
+  const handleHNT2Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, hnt2: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleHNT3Upload = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.result) {
+        let loadingToast = toast.loading("Đang tải ảnh...");
+        const filename = reader.result;
+        const url = await uploadToCloudinary(filename);
+        setEvent({ ...event, hnt3: url });
+        toast.dismiss(loadingToast);
+        toast.success("Đã tải ảnh");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+  
   const handleTitleKeyDown = (e) => {
     if (e.keyCode === 13) {
       e.preventDefault();
@@ -43,32 +380,64 @@ const EventEditor = () => {
 
   const handlePushlish = (e) => {
     if (!title.length) {
-      return toast.error("Vui lòng thêm tiêu đề để đăng");
+      return toast.error("Vui lòng thêm tiêu đề để gửi");
     }
-    let loadingToat = toast.loading("Đang đăng....")
-    e.target.classList.add('disable')
+    if (!tcc.length) {
+      return toast.error("Vui lòng thêm tiêu chuẩn chung");
+    }
+    if (!ddtbb.length) {
+      return toast.error("Vui lòng thêm minh chứng bắt buộc cho Đạo đức tốt");
+    }
+    if (!httbb.length) {
+      return toast.error("Vui lòng thêm minh chứng bắt buộc cho Học tập tốt");
+    }
+    if (!hntbb.length) {
+      return toast.error("Vui lòng thêm minh chứng bắt buộc cho Hội nhập tốt");
+    }
+    let loadingToat = toast.loading("Đang đăng....");
+    e.target.classList.add("disable");
     let eventObj = {
-      title, tcc
-    }
-    axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/create-event', eventObj, {
-      headers: {
-        'Authorization': `Bearer ${access_token}`
-      }
-    })
-    .then(() => {
-      e.target.classList.remove('disable')
-      toast.dismiss(loadingToat)
-      toast.success("Đã đăng")
-      setTimeout(() => {
-        navigate("/")
-      }, 500)
-    })
-    .catch(({response}) => {
-      e.target.classList.remove('disable')
-      toast.dismiss(loadingToat)
+      title,
+      tcc,
+      ddtbb,
+      ddt1,
+      ddt2,
+      ddt3,
+      ddt4,
+      httbb,
+      htt1,
+      htt2,
+      htt3,
+      htt4,
+      htt5,
+      tlt1,
+      tlt2,
+      tnt1,
+      tnt2,
+      hntbb,
+      hnt1,
+      hnt2,
+      hnt3,
+    };
+    axios
+      .post(import.meta.env.VITE_SERVER_DOMAIN + "/create-event", eventObj, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+      .then(() => {
+        e.target.classList.remove("disable");
+        toast.dismiss(loadingToat);
+        toast.success("Đã đăng");
+        navigate("/");
+        window.scrollTo({top: 0, behavior:"smooth"})
+      })
+      .catch(({ response }) => {
+        e.target.classList.remove("disable");
+        toast.dismiss(loadingToat);
 
-      return toast.error(response.data.error)
-    })
+        return toast.error(response.data.error);
+      });
   };
 
   return (
@@ -81,17 +450,8 @@ const EventEditor = () => {
           {title.length ? title : `Tham gia "Sinh viên 5 tốt"`}
         </p>
         <div className="flex gap-4 ml-auto">
-          <Link
-            className="btn-light py-2 flex gap-2"
-            to={
-              "https://docs.google.com/spreadsheets/d/1K3o7e34cjtUirNcHlQkdYYBXNr78gDRv/edit#gid=25855763"
-            }
-          >
-            {" "}
-            <p>Thông tin tiêu chuẩn</p> <i className="fi fi-rr-info"></i>
-          </Link>
           <button className="btn-dark py-2" onClick={handlePushlish}>
-            Đăng
+            Gửi
           </button>
         </div>
       </nav>
@@ -99,7 +459,7 @@ const EventEditor = () => {
       <AnimationWrapper>
         <Toaster />
         <section>
-          <div className="mx-auto max-w-[900px] w-full">
+          <div className="mx-auto max-w-[1000px] w-full">
             <textarea
               defaultValue={title}
               placeholder="Tiêu đề (MSSV-Lop-HoTen)"
@@ -139,15 +499,21 @@ const EventEditor = () => {
                   <td className="px-6 py-4">
                     Bản photo giấy chứng nhận đạt danh hiệu, Khen thưởng
                   </td>
-                  <td className="px-6 py-4">
-                  <label htmlFor="uploadBanner">
-            
-                <input
-                  id="uploadBanner"
-                  type="file"
-                  accept="application/docx"         
-                />
-              </label>
+                  <td className="px-6 py-4 w-[30%]">
+                    <label htmlFor="uploadBanner">
+                      {tcc == "" || tcc == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={tcc} className="z-20" />
+                      )}
+                      <input
+                        id="uploadBanner"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleBannerUpload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
@@ -172,12 +538,20 @@ const EventEditor = () => {
                     Bảng điểm đánh giá kết quả rèn luyện năm học 2022 – 2023
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadDDTBB">
+                      {ddtbb == "" || ddtbb == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={ddtbb} className="z-20" />
+                      )}
+                      <input
+                        id="uploadDDTBB"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleDDTBBUpload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
@@ -198,12 +572,20 @@ const EventEditor = () => {
                     đội tuyển
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadDDT1">
+                      {ddt1 == "" || ddt1 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={ddt1} className="z-20" />
+                      )}
+                      <input
+                        id="uploadDDT1"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleDDT1Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
@@ -217,12 +599,20 @@ const EventEditor = () => {
                     photo giấy chứng nhận, khen thưởng
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadDDT2">
+                      {ddt2 == "" || ddt2 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={ddt2} className="z-20" />
+                      )}
+                      <input
+                        id="uploadDDT2"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleDDT2Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
@@ -236,12 +626,20 @@ const EventEditor = () => {
                     Bản photo Giấy khen hoặc giấy chứng nhận
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadDDT3">
+                      {ddt3 == "" || ddt3 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={ddt3} className="z-20" />
+                      )}
+                      <input
+                        id="uploadDDT3"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleDDT3Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
@@ -256,12 +654,20 @@ const EventEditor = () => {
                     phương
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadDDT4">
+                      {ddt4 == "" || ddt4 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={ddt4} className="z-20" />
+                      )}
+                      <input
+                        id="uploadDDT4"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleDDT4Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
@@ -279,18 +685,27 @@ const EventEditor = () => {
                 </tr>
                 <tr className="border-b dark:bg-gray-800 dark:border-gray-700">
                   <td className="px-6 py-4">
-                    Điểm trung bình chung học tập cả năm học 2022 – 2023: 2.3/4.0
+                    Điểm trung bình chung học tập cả năm học 2022 – 2023:
+                    2.3/4.0
                   </td>
                   <td className="px-6 py-4">
-                    Bảng điểm trung bình chung học tập năm học 2022 – 2023 
+                    Bảng điểm trung bình chung học tập năm học 2022 – 2023
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadHTTBB">
+                      {httbb == "" || httbb == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={httbb} className="z-20" />
+                      )}
+                      <input
+                        id="uploadHTTBB"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleHTTBBUpload}
+                      />
+                    </label>
                   </td>
                 </tr>
                 <tr>
@@ -300,82 +715,129 @@ const EventEditor = () => {
                 </tr>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <td className="px-6 py-4">
-                    Có đề tài nghiên cứu khoa học sinh viên đạt giải cấp trường trở lên 
+                    Có đề tài nghiên cứu khoa học sinh viên đạt giải cấp trường
+                    trở lên
                   </td>
                   <td className="px-6 py-4">
                     Bản photo giấy chứng nhận hoặc khen thưởng
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadHTT1">
+                      {htt1 == "" || htt1 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={htt1} className="z-20" />
+                      )}
+                      <input
+                        id="uploadHTT1"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleHTT1Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <td className="px-6 py-4">
-                    Có bài tham luận tham gia các hội thảo khoa học từ cấp trường trở lên
+                    Có bài tham luận tham gia các hội thảo khoa học từ cấp
+                    trường trở lên
                   </td>
                   <td className="px-6 py-4">
-                    Bản photo bài tham luận, giấy xác nhận của Hội Sinh viên (Đoàn thanh niên trường) hoặc cấp tổ chức hội thảo khoa học.
+                    Bản photo bài tham luận, giấy xác nhận của Hội Sinh viên
+                    (Đoàn thanh niên trường) hoặc cấp tổ chức hội thảo khoa học.
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadHTT2">
+                      {htt2 == "" || htt2 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={htt2} className="z-20" />
+                      )}
+                      <input
+                        id="uploadHTT2"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleHTT2Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <td className="px-6 py-4">
-                    Có sản phẩm sáng tạo được cấp bằng sáng chế, cấp giấy phép xuất bản hoặc được các giải thưởng từ cấp tỉnh trở lên.
+                    Có sản phẩm sáng tạo được cấp bằng sáng chế, cấp giấy phép
+                    xuất bản hoặc được các giải thưởng từ cấp tỉnh trở lên.
                   </td>
                   <td className="px-6 py-4">
                     Bản photo bằng sáng chế, hoặc giấy phép, hoặc giải thưởng
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadHTT3">
+                      {htt3 == "" || htt3 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={htt3} className="z-20" />
+                      )}
+                      <input
+                        id="uploadHTT3"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleHTT3Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <td className="px-6 py-4">
-                    Là thành viên các đội tuyển tham gia các kỳ thi học thuật cấp quốc gia, quốc tế.
+                    Là thành viên các đội tuyển tham gia các kỳ thi học thuật
+                    cấp quốc gia, quốc tế.
                   </td>
                   <td className="px-6 py-4">
-                    Xác nhận của cấp thành lập đội tuyển hoặc của Hội Sinh viên (Đoàn Thanh niên trường), bản photo khen thưởng (nếu có) 
+                    Xác nhận của cấp thành lập đội tuyển hoặc của Hội Sinh viên
+                    (Đoàn Thanh niên trường), bản photo khen thưởng (nếu có)
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadHTT4">
+                      {htt4 == "" || htt4 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={htt4} className="z-20" />
+                      )}
+                      <input
+                        id="uploadHTT4"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleHTT4Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <td className="px-6 py-4">
-                    Đạt giải thưởng trong các cuộc thi ý tưởng sáng tạo từ cấp tỉnh trở lên.
+                    Đạt giải thưởng trong các cuộc thi ý tưởng sáng tạo từ cấp
+                    tỉnh trở lên.
                   </td>
                   <td className="px-6 py-4">
                     Bản photo chứng nhận giải thưởng
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadHTT5">
+                      {htt5 == "" || htt5 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={htt5} className="z-20" />
+                      )}
+                      <input
+                        id="uploadHTT5"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleHTT5Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
@@ -385,7 +847,7 @@ const EventEditor = () => {
                     3
                   </td>
                   <td rowSpan="3" className="px-6 py-4">
-                    Tiêu chuẩn Tình nguyện tốt
+                    Tiêu chuẩn Thể lực tốt
                   </td>
                   <td colSpan="3" className="px-6 py-4">
                     Đạt 1 trong hai tiêu chuẩn sau:
@@ -393,36 +855,52 @@ const EventEditor = () => {
                 </tr>
 
                 <tr className="border-b dark:bg-gray-800 dark:border-gray-700">
-                  <td className="px-6 py-4">
-                    Đạt danh hiệu “Sinh viên khỏe”
-                  </td>
+                  <td className="px-6 py-4">Đạt danh hiệu “Sinh viên khỏe”</td>
                   <td className="px-6 py-4">
                     Bản photo giấy chứng nhận hoặc hình ảnh
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadTLT1">
+                      {tlt1 == "" || tlt1 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={tlt1} className="z-20" />
+                      )}
+                      <input
+                        id="uploadTLT1"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleTLT1Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <td className="px-6 py-4">
-                    Tham gia và đạt giải tại các hoạt động thể thao phong trào từ cấp khoa trở lên.
+                    Tham gia và đạt giải tại các hoạt động thể thao phong trào
+                    từ cấp khoa trở lên.
                   </td>
                   <td className="px-6 py-4">
-                    Bản photo giấy chứng nhận hoặc khen thưởng hoặc hình ảnh tham gia
+                    Bản photo giấy chứng nhận hoặc khen thưởng hoặc hình ảnh
+                    tham gia
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadTLT2">
+                      {tlt2 == "" || tlt2 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={tlt2} className="z-20" />
+                      )}
+                      <input
+                        id="uploadTLT2"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleTLT2Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
@@ -444,29 +922,44 @@ const EventEditor = () => {
                     Giấy chứng nhận và hình ảnh minh chứng
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadTNT1">
+                      {tnt1 == "" || tnt1 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={tnt1} className="z-20" />
+                      )}
+                      <input
+                        id="uploadTNT1"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleTNT1Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <td className="px-6 py-4">
-                    Được khen thưởng từ cấp trường trở lên về hoạt động tình nguyện.
+                    Được khen thưởng từ cấp trường trở lên về hoạt động tình
+                    nguyện.
                   </td>
+                  <td className="px-6 py-4">Bản photo khen thưởng</td>
                   <td className="px-6 py-4">
-                    Bản photo khen thưởng
-                  </td>
-                  <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadTNT2">
+                      {tnt2 == "" || tnt2 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={tnt2} className="z-20" />
+                      )}
+                      <input
+                        id="uploadTNT2"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleTNT2Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
@@ -485,20 +978,35 @@ const EventEditor = () => {
 
                 <tr className="border-b dark:bg-gray-800 dark:border-gray-700">
                   <td className="px-6 py-4">
-                    Tham gia và đạt giải tại các cuộc thi Olympic ngoại ngữ, hùng biện từ cấp khoa trở lên hoặc Đạt từ điểm 6,5 trở lên (tính theo thang điểm 10) đối với 01 môn thi Ngoại ngữ gần nhất theo chương trình học của trường hoặc có chứng chỉ ngoại ngữ (B1, TOEIC,...)đảm bảo tốt nghiệp đầu ra theo quy định của Nhà trường. Đối tượng sinh viên chuyên nghành Ngoại ngữ: Chứng chỉ ngoại ngữ được áp dụng với chuyên ngành ngoại ngữ theo quy định của trường; hoặc 
+                    Tham gia và đạt giải tại các cuộc thi Olympic ngoại ngữ,
+                    hùng biện từ cấp khoa trở lên hoặc Đạt từ điểm 6,5 trở lên
+                    (tính theo thang điểm 10) đối với 01 môn thi Ngoại ngữ gần
+                    nhất theo chương trình học của trường hoặc có chứng chỉ
+                    ngoại ngữ (B1, TOEIC,...)đảm bảo tốt nghiệp đầu ra theo quy
+                    định của Nhà trường. Đối tượng sinh viên chuyên nghành Ngoại
+                    ngữ: Chứng chỉ ngoại ngữ được áp dụng với chuyên ngành ngoại
+                    ngữ theo quy định của trường; hoặc
                   </td>
                   <td className="px-6 py-4">
-                    Bản photo Bảng điểm môn thi gần nhất hoặc chứng chỉ ngoại ngữ
-                    Hoặc photo hình ảnh tham gia các Hội thảo, chương trình có sử dụng ngoại ngữ
-                    Hoặc chứng nhận tham gia CLB Ngoại ngữ
+                    Bản photo Bảng điểm môn thi gần nhất hoặc chứng chỉ ngoại
+                    ngữ Hoặc photo hình ảnh tham gia các Hội thảo, chương trình
+                    có sử dụng ngoại ngữ Hoặc chứng nhận tham gia CLB Ngoại ngữ
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadHNTBB">
+                      {hntbb == "" || hntbb == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={hntbb} className="z-20" />
+                      )}
+                      <input
+                        id="uploadHNTBB"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleHNTBBUpload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
@@ -510,35 +1018,58 @@ const EventEditor = () => {
 
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <td className="px-6 py-4">
-                    Hoàn thành ít nhất 01 khóa trang bị kỹ năng thực hành xã hội hoặc được Hội Sinh viên, Đoàn Thanh niên từ cấp khoa trở lên khen thưởng về thành tích xuất sắc trong công tác Hội và phong trào sinh viên, công tác Đoàn và phong trào thanh niên trường học trong năm học.
+                    Hoàn thành ít nhất 01 khóa trang bị kỹ năng thực hành xã hội
+                    hoặc được Hội Sinh viên, Đoàn Thanh niên từ cấp khoa trở lên
+                    khen thưởng về thành tích xuất sắc trong công tác Hội và
+                    phong trào sinh viên, công tác Đoàn và phong trào thanh niên
+                    trường học trong năm học.
                   </td>
                   <td className="px-6 py-4">
                     Bản photo giấy chứng nhận hoặc giấy khen
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadHNT1">
+                      {hnt1 == "" || hnt1 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={hnt1} className="z-20" />
+                      )}
+                      <input
+                        id="uploadHNT1"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleHNT1Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <td className="px-6 py-4">
-                    Tham gia ít nhất 01 hoạt động giao lưu quốc tế: Hội nghị, Hội thảo quốc tế, các chương trình gặp gỡ, giao lưu, hợp tác với thanh niên, sinh viên quốc tế trong và ngoài nước. 
+                    Tham gia ít nhất 01 hoạt động giao lưu quốc tế: Hội nghị,
+                    Hội thảo quốc tế, các chương trình gặp gỡ, giao lưu, hợp tác
+                    với thanh niên, sinh viên quốc tế trong và ngoài nước.
                   </td>
                   <td className="px-6 py-4">
-                    Xác nhận của Liên chi Đoàn Khoa hoặc bản photo các chứng nhận, xác nhận khác có liên quan
+                    Xác nhận của Liên chi Đoàn Khoa hoặc bản photo các chứng
+                    nhận, xác nhận khác có liên quan
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadHNT2">
+                      {hnt2 == "" || hnt2 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={hnt2} className="z-20" />
+                      )}
+                      <input
+                        id="uploadHNT2"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleHNT2Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
 
@@ -549,19 +1080,25 @@ const EventEditor = () => {
                     sinh viên tổ chức.
                   </td>
                   <td className="px-6 py-4">
-                  Bản photo giấy chứng nhận hoặc khen thưởng
+                    Bản photo giấy chứng nhận hoặc khen thưởng
                   </td>
                   <td className="px-6 py-4">
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg .docs"
-                      className="w-full px-3 py-2 placeholder-gray-500 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Input 3"
-                    />
+                    <label htmlFor="uploadHNT3">
+                      {hnt3 == "" || hnt3 == null ? (
+                        <img src={defaultBanner} className="z-20 text-2xl" />
+                      ) : (
+                        <img src={hnt3} className="z-20" />
+                      )}
+                      <input
+                        id="uploadHNT3"
+                        type="file"
+                        accept=".png, .jpg, .jpeg"
+                        hidden
+                        onChange={handleHNT3Upload}
+                      />
+                    </label>
                   </td>
                 </tr>
-
-               
               </tbody>
             </table>
           </div>

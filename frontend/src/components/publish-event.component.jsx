@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { EditorEventContext } from "../pages/editor.sv5tot.page";
 
 const PublishEvent = () => {
-  let characterLimit = 200;
 
   let {
     event,
