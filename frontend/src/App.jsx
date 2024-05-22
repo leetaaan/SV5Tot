@@ -23,7 +23,8 @@ import ResetPasswordForm from "./pages/reset-password.page";
 import UsersTable from "./components/userTable/usersTable";
 import StudentTable from "./components/studentTable/studentTable";
 import DashBoard from "./components/dashboard/dashboard";
-import BlogTable from "./components/blogTable/blogTable"
+import BlogTable from "./components/blogTable/blogTable";
+import AddForm from "./components/addForm/addForm";
 
 export const UserContext = createContext({});
 
@@ -37,7 +38,7 @@ const App = () => {
       ? setUserAuth(JSON.parse(userInSession))
       : setUserAuth({ access_token: null });
   }, []);
-  
+
   return (
     <UserContext.Provider value={{ userAuth, setUserAuth }}>
       <Routes>
@@ -58,7 +59,10 @@ const App = () => {
           </Route>
           <Route path="/signin" element={<UserAuthForm type="sign-in" />} />
           <Route path="/forgot-password" element={<ForgotPasswordForm />} />
-          <Route path="/reset-password/:token" element={<ResetPasswordForm />} />
+          <Route
+            path="/reset-password/:token"
+            element={<ResetPasswordForm />}
+          />
           <Route path="/signup" element={<UserAuthForm type="sign-up" />} />
           <Route path="search/:query" element={<SearchPage />} />
           <Route path="user/:id" element={<ProfilePage />} />
@@ -66,13 +70,13 @@ const App = () => {
           <Route path="community-standards" element={<CommunityStandards />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
-        <Route path="/admin" element={<Admin/>}/>
+        <Route path="/admin" element={<Admin />} />
 
         <Route
           path="/admin/dashboards"
           element={
             <Admin>
-              <DashBoard/>
+              <DashBoard />
             </Admin>
           }
         />
@@ -104,11 +108,20 @@ const App = () => {
           }
         />
 
-<Route
+        <Route
           path="/admin/blogs"
           element={
             <Admin>
-              <BlogTable/>
+              <BlogTable />
+            </Admin>
+          }
+        />
+
+        <Route
+          path="/admin/addUser"
+          element={
+            <Admin>
+              <AddForm />
             </Admin>
           }
         />

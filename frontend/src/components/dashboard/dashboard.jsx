@@ -7,27 +7,30 @@ const DashBoard = () => {
     <div className="my-10 mx-10 overflow-visible">
       <div className="grid grid-cols-3 gap-x-8 h-full">
         <div className="min-h-24 border-r-4 rounded border-gray shadow-md">
-          <div className="text-xl font-semibold p-2 mx-3">
-            Tổng số người dùng
+          <div className="">
+            <div className="text-xl font-semibold p-2 mx-3">
+              Tổng số người dùng
+            </div>
+            <div className="p-2 mx-3">200</div>
           </div>
-          <div className="p-2 mx-3">200</div>
         </div>
         <div className="min-h-24 border-r-4 rounded border-red shadow-md">
-          <div className="text-xl font-semibold p-2 mx-3">
-            Tổng số người dùng
-          </div>
+          <div className="text-xl font-semibold p-2 mx-3">Tổng số bài viết</div>
           <div className="p-2 mx-3">200</div>
-        </div>
+        </div>  
         <div className="min-h-24 border-r-4 rounded border-purple shadow-md">
           <div className="text-xl font-semibold p-2 mx-3">
-            Tổng số người dùng
+            Tổng số sinh viên đạt danh hiệu
           </div>
           <div className="p-2 mx-3">200</div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-x-2 mt-3">
-        <PieChart />
-        <BarChart />
+      <div className="flex flex-col items-start gap-x-2 mt-3">
+        <div className="font-semibold text-xl mb-2">Biểu đồ </div>
+        <div className="grid grid-cols-2 w-full ">
+          <PieChart />
+          <BarChart />
+        </div>
       </div>
       <div className="max-h-10 w-full mt-5 ">
         <div className="flex w-full justify-between mb-2 ">

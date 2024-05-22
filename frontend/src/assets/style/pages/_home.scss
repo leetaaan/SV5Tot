@@ -1,6 +1,5 @@
 .home {
   height: 100vh;
-  overflow: hidden;
 
   &__sider {
     height: 100vh;
@@ -18,6 +17,7 @@
   &__content {
     margin: 24px 16px;
     padding: 20px;
+    overflow: auto;
   }
 
   .trigger-btn {

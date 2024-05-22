@@ -25,7 +25,7 @@ const Sidebar = () => {
     {
       key: "criteria",
       icon: <OrderedListOutlined />,
-      label: (<Link to='/admin/criterias' className="" title="">Xét duyệt tiêu chí</Link>),
+      label: (<Link to='/admin/criterias' className="" title="">Xét duyệt</Link>),
     },
     {
       key: "posts",

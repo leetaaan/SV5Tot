@@ -43,7 +43,7 @@ const BarChart = () => {
       },
       title: {
         display: true,
-        text: 'Number of Students with and without 5 Good Title',
+        text: 'Number of Students',
       },
     },
     scales: {
@@ -65,3 +65,4 @@ const BarChart = () => {
 };
 
 export default BarChart;
+

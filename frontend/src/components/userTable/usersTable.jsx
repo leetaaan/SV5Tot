@@ -1,5 +1,5 @@
 // UserTable.js
-import { Table, Button  , Space, Input, Pagination } from "antd";
+import { Table, Button, Space, Input, Pagination } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 import React, { useState } from "react";
@@ -7,6 +7,7 @@ import WarningModal from "../modals/warningModal";
 import CriteriaModal from "../modals/criteriaModal";
 import exampleCriteria from "../../assets/json/exampleCriteria";
 import UserColumns from "../../assets/columns/userColumn";
+import { Link } from "react-router-dom";
 
 const UsersTable = () => {
   const [dataSource, setDataSource] = useState([]); //data
@@ -42,21 +43,6 @@ const UsersTable = () => {
 
   const handleViewPersonalInfo = (record) => {};
 
-  const handleOk = (values) => {
-    const newData = selectedRecord
-      ? dataSource.map((item) =>
-          item.key === selectedRecord.key ? { ...item, ...values } : item
-        )
-      : [...dataSource, { ...values, key: Date.now() }];
-
-    setDataSource(newData);
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
   const handleSearch = (e) => {
     const { value } = e.target;
     setSearchText(value);
@@ -81,7 +67,10 @@ const UsersTable = () => {
 
   return (
     <div className="usersTable">
-      <div className="usersTable__search flex w-full" style={{ marginBottom: 16 }}>
+      <div
+        className="usersTable__search flex w-full"
+        style={{ marginBottom: 16 }}
+      >
         <Input
           placeholder="Tìm kiếm..."
           prefix={<SearchOutlined />}
@@ -89,16 +78,31 @@ const UsersTable = () => {
           style={{ width: 200, marginRight: 8 }}
           allowClear
         />
-        <div className="userTable__btn">
-          <Button className="" type="primary" onClick={handleAdd}>
+        <div className="userTable__btn mt-1">
+          <Link
+            to="/admin/addUser"
+            className=" px-4 rounded-lg py-2 bg-blue text-white hover:text-blue hover:bg-white hover:border transition duration-700 ease-in-out mr-2"
+            type="primary"
+            onClick={handleAdd}
+          >
             Thêm
-          </Button>
-          <Button className="ml-2 bg-red !important" type="primary" onClick={handleAdd}>
+          </Link>
+          <Link
+            to="/admin/addUser"
+            className=" px-4 rounded-lg py-2 bg-red text-white hover:text-red hover:bg-white hover:border transition duration-700 ease-in-out mr-2"
+            type="primary"
+            onClick={handleAdd}
+          >
             Xuất file
-          </Button>
-          <Button className="ml-2 bg-teal" type="primary" onClick={handleAdd}>
+          </Link>
+          <Link
+            to="/admin/addUser"
+            className=" px-4 rounded-lg py-2 bg-green hover:text-green hover:bg-white hover:border transition duration-700 ease-in-out text-white mr-2"
+            type="primary"
+            onClick={handleAdd}
+          >
             Thêm file
-          </Button>
+          </Link>
         </div>
       </div>
       <Table
@@ -109,7 +113,7 @@ const UsersTable = () => {
           handleViewPersonalInfo,
         })}
         pagination={false}
-        scroll={{ x: "calc(700px + 80%" }}
+        scroll={{ x: "calc(700px + 80%)", y: "80vh" }}
       />
       <Pagination
         current={currentPage}
@@ -121,17 +125,7 @@ const UsersTable = () => {
         showQuickJumper
         className="infomationTable__pagination"
       />
-      <CriteriaModal
-        visible={isModalVisible}
-        onCreate={handleOk}
-        onCancel={handleCancel}
-        selectedRecord={selectedRecord}
-        columns={UserColumns({
-          handleEdit,
-          handleDelete,
-          handleViewPersonalInfo,
-        })}
-      />
+
       <WarningModal
         visible={!!deleteRecord}
         record={deleteRecord}
