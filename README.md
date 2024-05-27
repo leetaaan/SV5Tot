@@ -17,7 +17,7 @@ Dự án được xây dựng thiên về diễn đàn sinh viên 5 tốt. Đư�
 | `DB_LOCATION` | **Required**. Link kết nối với MongoDB |
 | `SECRET_ACCESS_KEY` | **Required**. Key JWT |
 
-#Bắt đầu
+# Bắt đầu
 ## 1. Chạy Server
 ```bash
 cd server
