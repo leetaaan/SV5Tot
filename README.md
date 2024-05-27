@@ -23,12 +23,18 @@ Dự án được xây dựng thiên về diễn đàn sinh viên 5 tốt. Đư�
 cd server
 ```
 ```bash
+npm i
+```
+```bash
 $ npm start
 ```
 
 ## 2. Chạy Frontend
 ```bash
 cd frontend
+```
+```bash
+npm i
 ```
 ```bash
 $ npm run dev
